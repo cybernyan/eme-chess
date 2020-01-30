@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta chaset="utf-8" />
+    <title>chess</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="javascript/account.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script>
+    
+
+    
+    </script>
+</head>
+
+<body onload="init()">
+
+<main>
+    Strona główna
+
+    <div>
+        <form id="loginForm" method="POST" action="/login">
+            <p>Zaloguj się:</p>
+            <div>
+                Login: <input name="loginUsername" id="loginUsername" type="text" />
+                <span id="loginUsernameError" class="errorMessage"></span>
+            </div>
+            <div>
+                Hasło: <input name="loginPassword" id="loginPassword" type="password" />
+                <span id="loginPasswordError" class="errorMessage"></span>            
+            </div>
+            <div id="loginError" class="errorMessage"><%= locals.loginError %></div>
+            <input type="submit" value="Zaloguj" />
+        </form>
+    </div>
+    <div>
+        <form id="createForm" method="POST" action="/create">
+            <p>Utwórz konto</p>
+            <div>
+                Login: <input id="createUsername" name="createUsername" type="text" />
+                <span id="createUsernameError" class="errorMessage"></span>            
+            </div>
+            <div>
+                Hasło: <input id="createPassword" name="createPassword" type="password" />
+                <span id="createPasswordError" class="errorMessage"></span>            
+            </div>
+            <div>
+                Powtórz hasło: <input id="createRepeatPassword" name="createRepeatPassword" type="password" />
+                <span id="createRepeatPasswordError" class="errorMessage"></span>            
+            </div>
+            <div id="createError" class="errorMessage"><%= locals.createError %></div>
+            <input type="submit" value="Zarejestruj" />
+        </form>
+    </div>
+    <div>
+        <form id="noRegistrationForm" method="POST" action="/noRegistration">
+            <p>Kontynuuj bez rejestracji</p>
+            <div>
+                Nick: <input id="noRegistrationNick" name="noRegistrationNick" type="text" />
+                <span id="noRegistrationNickError" class="errorMessage"></span>            
+            </div>
+            <div id="noRegistrationError" class="errorMessage"><%= locals.noRegistrationError %></div>
+            <input type="submit" value="Kontynuuj" />
+            <p>Nie będą wtedy prowadzone Twoje statystyki!</p>
+        </form>
+    </div>
+
+</main>
+
+
+</body>
+
+</html>

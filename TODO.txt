@@ -1,0 +1,3 @@
+
+3. zrobic ajaxowe monitorowanie aktywnych uzytkownikow w game.js
+4. tabelka z info dla zarejestrowanych uzytkownikow

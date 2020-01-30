@@ -1,0 +1,73 @@
+#content {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    width: 1200px;
+
+}
+
+
+#external {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: green;
+    max-width: 700px;
+    max-height: auto;
+
+    min-width: 512px;
+    min-height: auto;
+}
+
+aside#rightaside {
+    background-color: red;
+
+    min-width: 250px;
+    min-height: auto;
+}
+
+aside#leftaside {
+    background-color: blue;
+
+    min-width: 250px;
+    min-height: auto;
+}
+
+header {
+    background-color: pink;
+
+    width: 1200px;
+}
+
+footer {
+    background-color: orange;
+
+    width: 1200px;
+}
+
+main>div#canvasDiv {
+
+    width: 512px;
+    height: 512px;
+
+    background-color: red;
+    border:1px solid #000000;
+
+}
+
+
+.errorMessage {
+    color: red;
+    font-weight: bold;
+}

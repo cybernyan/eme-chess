@@ -3,7 +3,7 @@ function init() {
 
     $('#noRegistrationForm').submit(function() {
 
-        if ($('noRegistrationNick').val() != undefined) {
+        if ($('noRegistrationNick').val() != "") {
             return true;
         }
 

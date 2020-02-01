@@ -167,6 +167,7 @@ function configureServer() {
 (async function main() {
 
     try {
+        console.log("TEST");
         var server = configureServer();
         server.listen(process.env.PORT || 3000);
         //server.listen(443);

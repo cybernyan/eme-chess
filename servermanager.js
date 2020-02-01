@@ -73,7 +73,7 @@ class OnlinePlayer {
 
     toString() {
         var res = this.name;
-        if (!this.loggedIn) res += ' (niezarejestrowany)';
+        if (!this.loggedIn) res += ' (nz)';
         res += ' ' + this.activity;
         return res;
     }

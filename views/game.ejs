@@ -16,30 +16,40 @@
 
     <div id="external">
 
-        <header>
-            Użytkownik: <%= locals.username %>
-            <form method="GET" action="/logout">
-                <input type="submit" value="Wyloguj">
-            </form>
+        <header class="container outside">
+            <h2 class="align-left">CHESS</h2>
+            <div class="align-right">
+                <div>Użytkownik: <%= locals.username %></div>
+                <form method="GET" action="/logout">
+                    <input type="submit" value="Wyloguj">
+                </form>
+            </div>
         </header>
 
-        <div id="content">
+        <div id="content" class="container outside">
 
             <aside id="leftaside">
-                <div>leftaside</div>
-                <div>Połączeni użytkownicy:</div>
-                <div id="connectedUsers"></div>
-                <div>w poczekalni:</div>
-                <div id="waitingUsers"></div>
-                <div>rozgrywane gry:</div>
-                <div id="games"></div>
-                <div>twoje statystyki:</div>
-                <div id="yourStats"></div>
+                <div class="inside-container">
+                    <div>Połączeni użytkownicy:</div>
+                    <div id="connectedUsers"></div>
+                </div>
+                <div class="inside-container">
+                    <div>w poczekalni:</div>
+                    <div id="waitingUsers"></div>
+                </div>
+                <div class="inside-container">
+                    <div>rozgrywane gry:</div>
+                    <div id="games"></div>
+                </div>
+                <div class="inside-container">
+                    <div>twoje statystyki:</div>
+                    <div id="yourStats"></div>        
+                </div>
 
             </aside>
 
             <main>
-                <div id="centerbox_buttons">
+                <div id="centerbox_buttons" class="inside-container">
                     <input type="submit" onclick="send()" value="Nowa gra">
                     <input type="submit" onclick="drawRequest()" value="Zaproponuj remis">
                     <input type="submit" onclick="giveUp()" value="Poddaj się">
@@ -50,21 +60,21 @@
             </main>
 
             <aside id="rightaside">
-                <div id="rightaside_buttons">
+                <div id="rightaside_buttons" class="inside-container">
                     <input type="submit" onclick="changePromotion('queen')" value="QUEEN">
                     <input type="submit" onclick="changePromotion('rook')" value="ROOK">
                     <input type="submit" onclick="changePromotion('knight')" value="KNIGHT">
                     <input type="submit" onclick="changePromotion('bishop')" value="BISHOP">            
                 </div>
-                <div id="log" style="max-height: 300px;">
+                <div id="log" class="inside-container">
                     INFO<br>
                 </div>
             </aside>
 
         </div>
 
-        <footer>
-            FOOTER
+        <footer class="container outside">
+            Bartłomiej Grochowski 2020
         </footer>
 
     </div>

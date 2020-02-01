@@ -11,7 +11,30 @@ body {
     font-family: 'Lusitana', serif;
     text-shadow: 0.0em 0.1em 0.1em black, 0.1em 0.2em 0.5em black, 0.1em 0.2em 0.5em black;
     margin: 0;
+    color: #a79e9e
 }
+
+.outside {
+    width: 75%;
+}
+
+.container {
+    background-image: url("../img/DivBackground.png");
+
+    border-style: double;
+    border-color: rgba(72,64,80,0.75);
+    border-radius: 20px;
+
+    padding: 10px;
+    
+}
+
+
+.inside-container {
+    padding: 10px;
+    margin: 5px;
+}
+
 
 main {
     position: center;
@@ -37,8 +60,15 @@ header {
 
 
 
+.align-left {
+    position: absolute;
+    left: 10px;
+}
 
-
+.align-right {
+    position: absolute;
+    right: 10px;
+}
 
 
 
@@ -56,7 +86,6 @@ header {
     flex-direction: row;
     justify-content: center;
 
-    width: 1200px;
 
 }
 
@@ -74,7 +103,6 @@ main {
     flex-direction: column;
     align-items: center;
 
-    background-color: green;
     max-width: 700px;
     max-height: auto;
 
@@ -83,22 +111,26 @@ main {
 }
 
 aside#rightaside {
-    background-color: red;
 
-    min-width: 250px;
+    min-width: 300px;
+    min-height: auto;
+
+    max-width: 400px;
     min-height: auto;
 }
 
 aside#leftaside {
-    background-color: blue;
-
-    min-width: 250px;
+    
+    min-width: 300px;
     min-height: auto;
+
+    max-width: 400px;
+    min-height: auto;
+
 }
 
 
 footer {
-    background-color: orange;
 
     width: 1200px;
 }
@@ -108,7 +140,7 @@ main>div#canvasDiv {
     width: 512px;
     height: 512px;
 
-    background-color: red;
+
     border:1px solid #000000;
 
 }
@@ -117,4 +149,9 @@ main>div#canvasDiv {
 .errorMessage {
     color: red;
     font-weight: bold;
+}
+
+#log {
+    height: 500px;
+    overflow-y: auto;
 }

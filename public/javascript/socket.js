@@ -24,7 +24,7 @@ socket.on('updateStats', function(statsHtml) {
 
 
 socket.on('updateChessboard', function(data,madeMove) {
-    debugger;
+
     addInfo(madeMove);
     chessmen = data; // update
     repaintBoard();
@@ -58,7 +58,7 @@ socket.on('trippledraw', function() {
 
 
 socket.on('startGame', function(color) {
-    setInfo("STARG NEW GAME");
+    setInfo("START A NEW GAME<br/>");
     playerColor = color;
 });
 
@@ -84,8 +84,13 @@ function setInfo(str) {
 }
 
 function addInfo(str) {
+    if (str == undefined) {
+        return;
+    }
+
     var infoDiv = document.getElementById('log');
     infoDiv.innerHTML += str + "<br/>";
+    infoDiv.scrollTop = infoDiv.scrollHeight - infoDiv.clientHeight;
 }
 
 function drawRequest() {

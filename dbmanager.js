@@ -26,6 +26,10 @@ async function connectToDatabase(dbManagerMode) {
     dbMode = dbManagerMode;
     activated = true;
 
+    if (dbMode == mode.DISABLED) {
+        return;
+    }
+
     // ***** ***** *****
     // INFO
     //

@@ -48,11 +48,11 @@ function getConnectedUsersHtml() {
         return "";
     }
 
+    var usersCnt = 0;
     for (let i=0; i<connectedUsers.length; i++) {
         if (connectedUsers[i] != null) {
-            html += `  <div>${i+1}. ${connectedUsers[i].toString()}</div>\r\n`;
-        } else {
-            i--;
+            usersCnt++;
+            html += `  <div>${usersCnt}. ${connectedUsers[i].toString()}</div>\r\n`;
         }
     }
 
@@ -159,14 +159,26 @@ function sliceSignedCookie(c) {
     return c.substring(startIndex,endIndex);
 }
 
+function deleteGame(game) {
+    
+    for (let i=0; i<games.length; i++) {
+        if (games[i] != null && games[i] == game) {
+            games[i] = null;
+        }
+    }
+
+    
+}
+
 function getGamesHtml() {
 
     var html = "<div>\r\n"
+
+    var gamesCnt = 0;
     for (let i=0; i<games.length; i++) {
-        if (games != null) {
-            html += `  <div>${i+1}. ${games[i].toString()}</div>\r\n`;
-        } else {
-            i--;
+        if (games[i] != null) {
+            gamesCnt++;
+            html += `  <div>${gamesCnt}. ${games[i].toString()}</div>\r\n`;
         }
     }
 
@@ -186,7 +198,11 @@ function getWaitingUsersHtml() {
 }
 
 function updateUsers() {
-    emitToEveryone('updateUsers',getConnectedUsersHtml(),getWaitingUsersHtml(),getGamesHtml());
+
+    var x = getConnectedUsersHtml();
+    var y = getWaitingUsersHtml();
+    var z = getGamesHtml();
+    emitToEveryone('updateUsers',x,y,z);
 }
 
 
@@ -249,6 +265,7 @@ function init(server) {
 }
 
 async function closeGame(game,reasonArg) {
+    
     game.isActive = false;
 
     emitToGame(game,'closeGame',reasonArg);
@@ -259,7 +276,10 @@ async function closeGame(game,reasonArg) {
     await dbManager.saveGame(game,reasonArg);
     await updateStats(game.player1.onlinePlayer);
     await updateStats(game.player2.onlinePlayer);
+
+    deleteGame(game);
     updateUsers();
+    
 }
 
 function addPlayerToWaitingRoom(player) {
@@ -330,11 +350,11 @@ function handleRequests(socket) {
     });
 
     // przeciwnik chcial remis, a gracz odpowiedzial
-    socket.on('drawResponse', function (response) {
+    socket.on('drawResponse', async function (response) {
         if (response) {
             console.log("REMIS ZA POROZUMIENIEM STRON");
             // TODO ! jaka gra? game=undefined
-            closeGame(game,enums.reason.USERSDRAW)
+            await closeGame(game,enums.reason.USERSDRAW);
         } else {
             console.log("ODRZUCONO REMIS");
         }
@@ -360,7 +380,7 @@ function handleRequests(socket) {
     });
 
     // ***** ***** MOVE REQUEST ***** *****
-    socket.on('moveRequest', function (chessmanID, col, row) {
+    socket.on('moveRequest', async function (chessmanID, col, row) {
 
         var game = getGameOfPlayer(player);
         if (game == null) {
@@ -423,7 +443,6 @@ function handleRequests(socket) {
             game.switchActualPlayer();
             emitToGame(game,'updateChessboard', game.chessmen, '(' + Math.ceil(game.numberOfMoves / 2) + ')' + madeMove);
 
-
             // IS CHECK ?
             var isCheck = game.isCheck(game.actualPlayer.color);
             if (isCheck) {
@@ -431,14 +450,16 @@ function handleRequests(socket) {
                 // IS CHECKMATE?
                 if (game.isCheckmate(game.actualPlayer.color, isCheck)) {
                     console.log("CHECKMATE");
+                    emitToGame(game,'checkmate');
 
                     if (game.actualPlayer.color == enums.color.WHITE) {
-                        closeGame(game,enums.reason.CHECKMATE_BLACK);
+                        await closeGame(game,enums.reason.CHECKMATE_BLACK);
                     } else {
-                        closeGame(game,enums.reason.CHECKMATE_WHITE);
+                        await closeGame(game,enums.reason.CHECKMATE_WHITE);
                     }
 
-                    emitToGame(game,'checkmate');
+                    
+
 
                 } else {
                     console.log("CHECK");
@@ -449,15 +470,19 @@ function handleRequests(socket) {
                 // IS DEAD POSITION?
                 if (game.isDeadPosition()) {
                     console.log("DEAD POSITION DRAW");
-                    closeGame(game,enums.reason.DEADPOSITION);
+                    await closeGame(game,enums.reason.DEADPOSITION);
                     emitToGame(game,'deadposition');
+
+
                 }
 
                 // IS STALEMATE?
                 if (game.isStalemate(game.actualPlayer.color, isCheck)) {
                     console.log("STALEMATE");
-                    closeGame(game,enums.reason.STALEMATE);
+                    await closeGame(game,enums.reason.STALEMATE);
                     emitToGame(game,'stalemate');
+
+
                 }
 
                 // IS TRIPPLE DRAW?
@@ -468,8 +493,10 @@ function handleRequests(socket) {
                     && (game.moves[n - 2] == game.moves[n - 4])
                     && (game.moves[n - 4] == game.moves[n - 6])) {
                     console.log("TRIPPLE DRAW");
-                    closeGame(game,enums.reason.TRIPPLEDRAW);
+                    await closeGame(game,enums.reason.TRIPPLEDRAW);
                     emitToGame(game,'trippledraw');
+
+
 
                 }
 

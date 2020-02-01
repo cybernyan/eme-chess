@@ -1,4 +1,3 @@
-var sm = require('./servermanager.js');
 
 const { King, Queen, Bishop, Knight, Rook, Pawn  } = require('./chessmen.js')
 const { type, color } = require('./enums.js');
@@ -46,6 +45,7 @@ class Game {
         this.isActive = true;
         this.numberOfMoves = 0;
 
+        const sm = require('./servermanager.js');
         sm.emitToPlayer(onlinePlayer1,'startGame',color1);
         sm.emitToPlayer(onlinePlayer2,'startGame',color2);
 

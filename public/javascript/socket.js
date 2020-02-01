@@ -24,6 +24,7 @@ socket.on('updateStats', function(statsHtml) {
 
 
 socket.on('updateChessboard', function(data,madeMove) {
+    debugger;
     addInfo(madeMove);
     chessmen = data; // update
     repaintBoard();

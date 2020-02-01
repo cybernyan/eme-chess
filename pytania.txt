@@ -1,0 +1,10 @@
+czemu google mowi za haslo bartek jest zle?
+skoro ja je hashuje z sola,
+czyli rainbow table nie dziala...
+
+
+czemu require nie widzi co eksportuje plik?
+czy musze dac module exports na gore???
+(w game.js mam:
+ const sm = require('./servermanager.js');
+wsrodku pliku, bo jak bylo na gorze, to nie importowal)

@@ -24,6 +24,7 @@ const cookie = require('cookie');
  */
 
 
+
 var activity = {
     NONE: "",
     PLAYING: "PLAYING", // gra

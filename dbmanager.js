@@ -3,22 +3,28 @@ var enums = require('./enums.js');
 
 var connection;
 const UNLOGGED = "Niezalogowany";
+var dbMode;
+var activated = false;
+
+
+// w jaki jest serwer bazy danych
+var mode = {
+    NONE: "", // niepolaczony
+    DISABLED: "DISABLED", // tryb bez bazy danych
+    MSSQL: "MSSQL", // mssql server
+    POSTGRESQL: "POSTGRESQL" // postgres
+}
+
 
 function isActive() {
     
-    
-    if (connection == undefined) {
-        return false;
-    }
-
-    if (!connection.connected) {
-        return false;
-    }
-
-    return true;
+    return activated;
 }
 
-async function connectToDatabase() {
+async function connectToDatabase(dbManagerMode) {
+
+    dbMode = dbManagerMode;
+    activated = true;
 
     // ***** ***** *****
     // INFO
@@ -51,7 +57,7 @@ async function connectToDatabase() {
 
     try {
         await connection.connect();
-        console.log("Connected to database.");
+        console.log("Connected to database in mode: " + dbMode);
     }
     catch (err) {
         console.log(err);
@@ -81,6 +87,12 @@ async function getHashForUser(username) {
 // returns true if success
 // false if user is in db
 async function addUser(username,hash) {
+
+    // EXIT IF
+    if (dbMode == mode.DISABLED) {
+        return;
+    }
+
     try {
 
         var req1 = new mssql.Request( connection );
@@ -113,6 +125,12 @@ async function addUser(username,hash) {
 }
 
 async function saveGame(game,reasonArg) {
+
+    // ----- EXIT IF
+    if (dbMode == mode.DISABLED) {
+        return;
+    }
+
     try {
 
         var winnerOfTheGame = 
@@ -164,6 +182,12 @@ async function saveGame(game,reasonArg) {
 
 // returns info about user
 async function getUserInfo(name) {
+
+    // EXIT IF
+    if (dbMode == mode.DISABLED) {
+        return { n:0, wins:0, draws:0, lost:0 };
+    }
+
     try {
         var req1 = new mssql.Request( connection );
         req1.input('name', name);
@@ -205,4 +229,4 @@ async function getUserInfo(name) {
 
 
 
-module.exports = { connectToDatabase, getHashForUser, addUser, saveGame, getUserInfo, isActive }
+module.exports = { connectToDatabase, getHashForUser, addUser, saveGame, getUserInfo, isActive, mode }

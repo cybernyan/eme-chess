@@ -169,7 +169,8 @@ function configureServer() {
     try {
         var server = configureServer();
         server.listen(process.env.PORT || 3000);
-        await dbManager.connectToDatabase();
+        //server.listen(443);
+        await dbManager.connectToDatabase(dbManager.mode.DISABLED); // nie lacz sie do bazy danych
         sm.init(server);
         
 

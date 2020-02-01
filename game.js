@@ -1,3 +1,5 @@
+var sm = require('./servermanager.js');
+
 const { King, Queen, Bishop, Knight, Rook, Pawn  } = require('./chessmen.js')
 const { type, color } = require('./enums.js');
 
@@ -15,7 +17,7 @@ class GamePlayer {
 
 class Game {
 
-    constructor(io,onlinePlayer1,onlinePlayer2) {
+    constructor(onlinePlayer1,onlinePlayer2) {
 
         this.chessmen = initChessmen();
         this.board = initChessBoard();
@@ -44,11 +46,12 @@ class Game {
         this.isActive = true;
         this.numberOfMoves = 0;
 
-        io.to(onlinePlayer1.activeSocketId).emit( 'startGame', color1 );
-        io.to(onlinePlayer2.activeSocketId).emit( 'startGame', color2 );
+        sm.emitToPlayer(onlinePlayer1,'startGame',color1);
+        sm.emitToPlayer(onlinePlayer2,'startGame',color2);
 
-        io.to(onlinePlayer1.activeSocketId).emit( 'updateChessboard', this.chessmen );
-        io.to(onlinePlayer2.activeSocketId).emit( 'updateChessboard', this.chessmen );
+        sm.emitToPlayer(onlinePlayer1,'updateChessboard',this.chessmen);
+        sm.emitToPlayer(onlinePlayer2,'updateChessboard',this.chessmen);
+
     }
 
     hasChessman(chmColor,chmType) {

@@ -70,6 +70,12 @@ async function connectToDatabase(dbManagerMode) {
 }
 
 async function getHashForUser(username) {
+
+    // EXIT IF
+    if (dbMode == mode.DISABLED) {
+        return "";
+    }
+
     try {
         var req = new mssql.Request( connection );
         req.input('username',username); 
@@ -81,9 +87,9 @@ async function getHashForUser(username) {
 
         return h.Hash;
     }
-    catch ( err ) {
-        console.log( err );
-        return [];
+    catch (err) {
+        console.log(err);
+        return "";
     }
 
 }
@@ -122,9 +128,8 @@ async function addUser(username,hash) {
             
         return true;
     }
-    catch ( err ) {
-        console.log( err );
-        return [];
+    catch (err) {
+        console.log(err);
     }
 }
 
@@ -178,9 +183,8 @@ async function saveGame(game,reasonArg) {
         
         return res2;
     }
-    catch ( err ) {
-        console.log( err );
-        return [];
+    catch (err) {
+        console.log(err);
     }
 }
 
@@ -225,12 +229,10 @@ async function getUserInfo(name) {
         
         return { n, wins, draws, lost };
     }
-    catch ( err ) {
-        console.log( err );
-        return [];
+    catch (err) {
+        console.log(err);
+        return { n:0, wins:0, draws:0, lost:0 };
     }
 }
-
-
 
 module.exports = { connectToDatabase, getHashForUser, addUser, saveGame, getUserInfo, isActive, mode }

@@ -524,64 +524,6 @@ class Pawn extends Chessman {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function tryToMoveLikeBishop(thisChessman,game,col,row,printLog=true) {
     
         // normal move or capture
@@ -755,27 +697,5 @@ function tryToMoveLikeRook(thisChessman,game,col,row,printLog=true) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 module.exports = { King, Queen, Bishop, Knight, Rook, Pawn  }
-
-
-
-
-
-
-
-
 

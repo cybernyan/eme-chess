@@ -167,16 +167,16 @@ function configureServer() {
 (async function main() {
 
     try {
-        console.log("TEST");
+
         var server = configureServer();
         server.listen(process.env.PORT || 3000);
-        //server.listen(443);
         await dbManager.connectToDatabase(dbManager.mode.DISABLED); // nie lacz sie do bazy danych
         sm.init(server);
-        
 
-    } catch( err ) {
-        console.log(err);
+    } catch(err) {
+
+        console.log("Exception caught in main: " + err);
+
     }
 
 })();

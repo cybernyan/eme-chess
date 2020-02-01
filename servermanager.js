@@ -259,7 +259,7 @@ async function closeGame(game,reasonArg) {
     await dbManager.saveGame(game,reasonArg);
     await updateStats(game.player1.onlinePlayer);
     await updateStats(game.player2.onlinePlayer);
-
+    updateUsers();
 }
 
 function addPlayerToWaitingRoom(player) {
@@ -280,7 +280,7 @@ function addPlayerToWaitingRoom(player) {
         player1.activity = activity.PLAYING;
         player2.activity = activity.PLAYING;
 
-        var game = new Game(io,player1,player2); // TODO !!! czy ja musze do gry dawac io???
+        var game = new Game(player1,player2); // TODO !!! czy ja musze do gry dawac io???
         games.push(game);
     }
 

@@ -1,3 +1,55 @@
+
+body {
+    background-image: url("../img/Background.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    background-attachment: fixed;
+    height: 200vh;
+    font-size: 2.0vh;
+    letter-spacing: 0.1em;
+    font-family: 'Lusitana', serif;
+    text-shadow: 0.0em 0.1em 0.1em black, 0.1em 0.2em 0.5em black, 0.1em 0.2em 0.5em black;
+    margin: 0;
+}
+
+main {
+    position: center;
+    margin: auto;
+    padding: 3em;
+    right: 5vh;
+    top: 3vh;
+    width: 85%;
+    max-width: 900px;
+    height: auto;
+    box-sizing: border-box;
+    border: 4px double rgba(72,64,80,0.75);
+    border-radius: 10px;
+    box-shadow: 0.1em 0.5em 2em black;
+}
+
+header {
+    position: relative;
+    height: 50px;
+    width: 80%;
+    background-color: darkgray;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #content {
 
     display: flex;
@@ -44,11 +96,6 @@ aside#leftaside {
     min-height: auto;
 }
 
-header {
-    background-color: pink;
-
-    width: 1200px;
-}
 
 footer {
     background-color: orange;

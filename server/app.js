@@ -3,16 +3,17 @@ const http          = require('http');
 const express       = require('express');
 const mssql         = require('mssql');
 const cookieParser  = require('cookie-parser');
-
+const fs            = require('fs');
 // ----- custom -----
 const dbManager     = require('./dbmanager.js');
 const sm            = require('./servermanager.js');
 const membership    = require('./membership.js');
+const config = require('../config.json');
+
 
 // ----- globals -----
 const secretKey = 'foobarbaz12345';
 const app = express();
-const config = JSON.parse("../config.json");
 
 function configureServer() {
 
@@ -161,7 +162,7 @@ function configureServer() {
 (async function main() {
 
     try {
-
+        //config = JSON.parse( await fs.promises.readFile("./config.json") );
         var server = configureServer();
         server.listen(process.env.PORT || 3000);
         //await dbManager.connectToDatabase(dbManager.mode.DISABLED); // nie lacz sie do bazy danych
@@ -175,4 +176,3 @@ function configureServer() {
     }
 
 })();
-

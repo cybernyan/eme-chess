@@ -2,7 +2,7 @@ const http = require('http');
 const crypto = require('crypto');
 
 const dbmanager = require('./dbmanager.js');
-const config = JSON.parse('../config.json')
+const config = require('../config.json');
 
 const iterations = config.membership.iterations;
 const keylen = config.membership.keylen;

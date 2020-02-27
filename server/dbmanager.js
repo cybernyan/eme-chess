@@ -1,12 +1,12 @@
 const mssql = require('mssql');
 const enums = require('./enums.js');
+const config = require('../config.json');
 
 var connection;
 var dbMode;
 
 var activated = false;
 const UNLOGGED = "Niezalogowany";
-const config = JSON.parse("../config.json");
 
 // which db server?
 var mode = {

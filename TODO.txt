@@ -1,6 +1,0 @@
-UWAGA - na heroku nie dziala,
-bo heroku uzywa innego portu (obiekt io ma inny port)
-musze wymombinowac jak ustawic ten sam
-
-np recznie? serwer niech wysle na ktorym jest porcie a potem 
-w javascripcie to podmienie????

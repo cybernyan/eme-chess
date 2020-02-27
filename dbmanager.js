@@ -218,14 +218,18 @@ async function getUserInfo(name) {
             
             if (userGames[i].Winner == enums.winner.DRAW) {
                 draws += 1;
-            } else if ((userGames[i].Winner == enums.winner.WHITE)
-                    && (userGames[i].UserWhite_ID == userID)) {
+            } else if (
+                (userGames[i].Winner == enums.winner.WHITE
+                && userGames[i].UserWhite_ID == userID)
+                ||
+                (userGames[i].Winner == enums.winner.BLACK
+                && userGames[i].UserBlack_ID == userID)
+            ) {
                 wins += 1;
-            } else if ((userGames[i].Winner == enums.winner.BLACK)
-                    && (userGames[i].UserBlack_ID == userID)) {
+            } else {
                 lost += 1;
             }
-        }        
+        }
         
         return { n, wins, draws, lost };
     }

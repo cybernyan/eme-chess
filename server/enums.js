@@ -1,5 +1,3 @@
-
-
 const color = {
     WHITE: 0,
     BLACK: 1
@@ -21,12 +19,12 @@ const winner = {
 }
 
 const reason = {
-    CHECKMATE_WHITE: 0, // bialy wygral
-    CHECKMATE_BLACK: 1, // czarny wygral 
-    STALEMATE: 2, // pat
-    USERSDRAW: 3, // za porozumieniem
-    DEADPOSITION: 4, // brak materialu
-    TRIPPLEDRAW: 5 // trzykrotne powtorzenie
+    CHECKMATE_WHITE: 0, // white won
+    CHECKMATE_BLACK: 1, // black won
+    STALEMATE: 2,       // pat
+    USERSDRAW: 3,       // users want a draw
+    DEADPOSITION: 4,    // no material to checkmate
+    TRIPPLEDRAW: 5      // 
 }
 
 module.exports = { type, color, winner, reason };

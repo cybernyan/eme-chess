@@ -1,7 +1,7 @@
-var { Game } = require('./game.js');
-var socket = require('socket.io');
-var dbManager = require('./dbmanager.js');
-var enums = require('./enums.js');
+const { Game } = require('./game.js');
+const socket = require('socket.io');
+const dbManager = require('./dbmanager.js');
+const enums = require('./enums.js');
 const cookie = require('cookie');
 
 
@@ -27,19 +27,22 @@ const cookie = require('cookie');
 
 var activity = {
     NONE: "",
-    PLAYING: "PLAYING", // gra
-    INLOBBY: "INLOBBY", // polaczony
-    WAITING: "WAITING", // czeka na gre
-    DISCONNECTED: "DISCONNECTED" // rozlaczony
+    PLAYING: "PLAYING",             // actual playing
+    INLOBBY: "INLOBBY",             // connected
+    WAITING: "WAITING",             // in waiting room
+    DISCONNECTED: "DISCONNECTED"    // lost connection ( socket.on('disconnet') )
 }
 
 
-var waitingRoom; // poczekalnia, obiekty to uzytkownicy OnlinePlayer
-var connectedUsers;
-var games;
+var waitingRoom; // array of OnlinePlayer objects
+var connectedUsers; // array of OnlinePlayer objects
+var games; // array of Game objects
+
 var io;
 
-
+/**
+ * @returns {string} html string to paste (for client)
+ */
 function getConnectedUsersHtml() {
 
     var html = "<div>\r\n"
@@ -64,11 +67,11 @@ function getConnectedUsersHtml() {
 class OnlinePlayer {
 
     constructor(activeSocketId,loggedIn,name) {
-        this.activeSocketId = activeSocketId; // gdzie maja byc wysylane dane
+        this.activeSocketId = activeSocketId; // id to send data
         this.loggedIn = loggedIn;
         this.name = name;
-        this.activity = activity.NONE; // co aktualnie robi? NONE | PLAYING | INLOBBY | WAITING | DISCONNECTED
-        this.onDeleteFunction = null; // wskaznik na funkcje, ktora ma usunac gracza
+        this.activity = activity.NONE; // what is doing? NONE | PLAYING | INLOBBY | WAITING | DISCONNECTED
+        this.onDeleteFunction = null; // pointer to invoking function (deletePlayer)
     }
 
     toString() {
@@ -79,26 +82,40 @@ class OnlinePlayer {
     }
 }
 
+/**
+ * Emits event only to one given player.
+ * @param {OnlinePlayer} onlinePlayer 
+ * @param {string} eventName 
+ * @param  {...any} args 
+ */
 function emitToPlayer(onlinePlayer,eventName,...args) {
     io.to(`${onlinePlayer.activeSocketId}`).emit(eventName, ...args);
 }
 
+/**
+ * Emits event to both players playing the game.
+ * @param {Game} game 
+ * @param {string} eventName 
+ * @param  {...any} args 
+ */
 function emitToGame(game,eventName,...args) {
     emitToPlayer(game.player1.onlinePlayer,eventName,...args);
     emitToPlayer(game.player2.onlinePlayer,eventName,...args);
 }
 
+/**
+ * Emits event to every connected player.
+ * @param {string} eventName 
+ * @param  {...any} args 
+ */
 function emitToEveryone(eventName,...args) {
     io.emit(eventName, ...args);
 }
 
 
 
-
-
-
 /**
- * 
+ * Sets null to connectedUsers array.
  * @param {OnlinePlayer} player
  * @returns {boolean}
  */
@@ -117,12 +134,15 @@ function deleteOnlinePlayer(player) {
 
 
 /**
-* @param {string} type
-* @param {string} identifier
-* @returns {OnlinePlayer}
-*/
+ * Returns OnlinePlayer from connectedUsers array.
+ * @param {string} type
+ * @param {string} identifier
+ * @returns {OnlinePlayer}
+ * @example getOnlinePlayer("ID",7)
+ * @example getOnlinePlayer("NAME","TheKetrab")
+ */
 function getOnlinePlayer(type,identifier) {
-    
+
     if (type == "ID") {
         for (let p of connectedUsers) {
             if (p != null && p.activeSocketId == identifier)
@@ -141,7 +161,11 @@ function getOnlinePlayer(type,identifier) {
 
 }
 
-
+/**
+ * Returns cookie taken from cookieHeader
+ * @param {string} cookieHeader 
+ * @param {string} cookieName 
+ */
 function parseCookie(cookieHeader,cookieName) {
     var cookies = cookie.parse(cookieHeader);
     var cookieStr = sliceSignedCookie(cookies[cookieName]);
@@ -159,6 +183,10 @@ function sliceSignedCookie(c) {
     return c.substring(startIndex,endIndex);
 }
 
+/**
+ * Sets null to games array.
+ * @param {Game} game 
+ */
 function deleteGame(game) {
     
     for (let i=0; i<games.length; i++) {
@@ -166,10 +194,11 @@ function deleteGame(game) {
             games[i] = null;
         }
     }
-
-    
 }
 
+/**
+ * @returns {string} html string with info about actual games (for client)
+ */
 function getGamesHtml() {
 
     var html = "<div>\r\n"
@@ -186,6 +215,9 @@ function getGamesHtml() {
     return html;
 }
 
+/**
+ * @returns {string} html string with info about players in waiting room (for client)
+ */
 function getWaitingUsersHtml() {
 
     var html = "<div>\r\n"
@@ -207,7 +239,7 @@ function updateUsers() {
 
 
 /**
- * 
+ * Takes info about the player from database.
  * @param {OnlinePlayer} onlinePlayer 
  */
 async function updateStats(onlinePlayer) {
@@ -242,7 +274,8 @@ function init(server) {
         var cookie = parseCookie(socket.handshake.headers.cookie,'authentication');
         var player = getOnlinePlayer("NAME",cookie.username);
         
-        // jesli taki uzytkownik jest polaczony to anuluj wykonanie funkcji i zmien socket.id polaczenia 
+        // if the user is already connected, cancel invoking
+        // 'onDelete' function and change id of socket
         if (player != null) {
             if (player.onDeleteFunction != null) {
                 clearTimeout(player.onDeleteFunction);
@@ -300,7 +333,7 @@ function addPlayerToWaitingRoom(player) {
         player1.activity = activity.PLAYING;
         player2.activity = activity.PLAYING;
 
-        var game = new Game(player1,player2); // TODO !!! czy ja musze do gry dawac io???
+        var game = new Game(player1,player2);
         games.push(game);
     }
 
@@ -329,12 +362,11 @@ function handleRequests(socket) {
         player.onDeleteFunction = setTimeout(function() { 
             deleteOnlinePlayer(player) 
             console.log(player.name + ' disconnected');
-        },30000);
+        },30000); // 30 seconds for reconnection
         updateUsers();
     });
 
     socket.on('startRequest', function (data) {
-
         addPlayerToWaitingRoom(player);
         updateUsers();
     });
@@ -349,18 +381,7 @@ function handleRequests(socket) {
         gamePlayer.promotion = type;
     });
 
-    // przeciwnik chcial remis, a gracz odpowiedzial
-    socket.on('drawResponse', async function (response) {
-        if (response) {
-            console.log("REMIS ZA POROZUMIENIEM STRON");
-            // TODO ! jaka gra? game=undefined
-            await closeGame(game,enums.reason.USERSDRAW);
-        } else {
-            console.log("ODRZUCONO REMIS");
-        }
-
-    });
-
+    // one player from a game wants a draw TODO
     socket.on('drawRequest', function (data) {
 
         // EXIT IF
@@ -378,6 +399,18 @@ function handleRequests(socket) {
         emitToPlayer(otherGamePlayer.onlinePlayer,'drawOffer',true);
 
     });
+
+    socket.on('drawResponse', async function (response) { // TODO
+        if (response) {
+            console.log("REMIS ZA POROZUMIENIEM STRON");
+            // TODO ! jaka gra? game=undefined
+            await closeGame(game,enums.reason.USERSDRAW);
+        } else {
+            console.log("ODRZUCONO REMIS");
+        }
+
+    });
+
 
     // ***** ***** MOVE REQUEST ***** *****
     socket.on('moveRequest', async function (chessmanID, col, row) {
@@ -412,12 +445,14 @@ function handleRequests(socket) {
         var madeMove = `${chm.name}[${String.fromCharCode(chm.row + 96)}${chm.col}]`;
         let [res, chmToKill] = chm.canMove(game, col, row);
 
-        // jesli mozesz wykonac ruch
+        // if move is allowed
         if (res == true) {
 
+            // ----- ----- ----- ----- -----
+            // may the move is allowed, but it must be cancelled, if the king is checked!
             var moveDone;
-            // czy jesli zabijesz figure to uchroni cie to od szachu?
             if (chmToKill != null) {
+                // if you kill a chessman, will you be no longer checked?
                 let index = game.indexOfChessmen(chmToKill.id);
                 game.chessmen[index] = null;
                 moveDone = chm.move(game, col, row);
@@ -430,6 +465,7 @@ function handleRequests(socket) {
                 emitToPlayer(player,'moveRejected', "You cannot make a move, that will checked your king.");
                 return;
             }
+            // ----- ----- ----- ----- -----
 
             madeMove += ` &rarr; [${String.fromCharCode(row + 96)}${col}]`;
             if (chmToKill != null) {
@@ -452,14 +488,12 @@ function handleRequests(socket) {
                     console.log("CHECKMATE");
                     emitToGame(game,'checkmate');
 
+                    // who wins?
                     if (game.actualPlayer.color == enums.color.WHITE) {
                         await closeGame(game,enums.reason.CHECKMATE_BLACK);
                     } else {
                         await closeGame(game,enums.reason.CHECKMATE_WHITE);
                     }
-
-                    
-
 
                 } else {
                     console.log("CHECK");
@@ -481,8 +515,6 @@ function handleRequests(socket) {
                     console.log("STALEMATE");
                     await closeGame(game,enums.reason.STALEMATE);
                     emitToGame(game,'stalemate');
-
-
                 }
 
                 // IS TRIPPLE DRAW?
@@ -496,12 +528,9 @@ function handleRequests(socket) {
                     await closeGame(game,enums.reason.TRIPPLEDRAW);
                     emitToGame(game,'trippledraw');
 
-
-
                 }
 
             }
-
 
 
         } else {
@@ -512,11 +541,6 @@ function handleRequests(socket) {
 
 
 };
-
-
-
-
-
 
 
 

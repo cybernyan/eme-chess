@@ -1,15 +1,14 @@
 
 const { King, Queen, Bishop, Knight, Rook, Pawn  } = require('./chessmen.js')
-const { type, color } = require('./enums.js');
-
+const enums = require('./enums.js');
 
 class GamePlayer {
 
     constructor(onlinePlayer,color) {
         this.onlinePlayer = onlinePlayer;
         this.color = color;
-        this.points = 0; // punkty za zbite figury
-        this.promotion = type.QUEEN;
+        this.points = 0; // points for killed chessman (TODO)
+        this.promotion = enums.type.QUEEN;
     }
 
 }
@@ -24,11 +23,11 @@ class Game {
 
         let color1, color2;
         if (Math.floor(Math.random() * 2)) {
-            color1 = color.WHITE;
-            color2 = color.BLACK;
+            color1 = enums.color.WHITE;
+            color2 = enums.color.BLACK;
         } else {
-            color1 = color.BLACK;
-            color2 = color.WHITE;
+            color1 = enums.color.BLACK;
+            color2 = enums.color.WHITE;
         }
 
         // -- CREATE PLAYERS --
@@ -36,7 +35,7 @@ class Game {
         this.player2 = new GamePlayer(onlinePlayer2,color2);
 
         // -- SET ACTUAL PLAYER --
-        if (color1 == color.WHITE) {
+        if (color1 == enums.color.WHITE) {
             this.actualPlayer = this.player1;
         } else {
             this.actualPlayer = this.player2;
@@ -45,7 +44,7 @@ class Game {
         this.isActive = true;
         this.numberOfMoves = 0;
 
-        const sm = require('./servermanager.js');
+        const sm = require('./servermanager.js'); // TODO - na gore przeniesc, to chyba przez rekurencyjne require pakietow (module exports na gore)
         sm.emitToPlayer(onlinePlayer1,'startGame',color1);
         sm.emitToPlayer(onlinePlayer2,'startGame',color2);
 
@@ -57,7 +56,6 @@ class Game {
     hasChessman(chmColor,chmType) {
 
         var res = 0;
-
         for (let chm of this.validChessmen()) {
             if (chm.color == chmColor && chm.type == chmType) {
                 res += 1;
@@ -74,7 +72,6 @@ class Game {
             str += "]";
             console.log(str);
         }
-            
     }
 
     // returns free id for new chessman
@@ -132,9 +129,9 @@ class Game {
         
         var king;
 
-        if (colorOfKing == color.WHITE)
+        if (colorOfKing == enums.color.WHITE)
             king = this.chessmanWithId(16); // white king
-        else if (colorOfKing == color.BLACK)
+        else if (colorOfKing == enums.color.BLACK)
             king = this.chessmanWithId(32); // black king
         else
             return false;
@@ -142,7 +139,7 @@ class Game {
         for (let chm of this.validChessmen()) {
             if (chm.color != colorOfKing) {
 
-                // jesli wroga figura moze sie ruszyc na dane pole, to je atakuje
+                // if opponent's chessman can move on that square, it attacks the square 
                 let [res,chmToKill] = chm.canMove(this,king.col,king.row,false);
                 if (res == true && chmToKill == king)
                     return true;
@@ -158,44 +155,44 @@ class Game {
             return false;
         }
 
-        // wyprobuj wszystkie mozliwe posuniecia i sprawdz czy jest dalej szach
+        // try to make all possible moves, detect if check is all the time
         for (let chm of this.validChessmen()) {
             if (chm.color == kingColor) {
 
                 for (let i=1; i<=8; i++) {
                     for (let j=1; j<=8; j++) {
 
-                        // wyprobuj wszystkie posuniecia dla tej figury
+                        // try every move for the chessman
                         let [res,chmToKill] = chm.canMove(this,i,j,false);
                         if (res == true) {
 
                             var prevRow = chm.row;
                             var prevCol = chm.col;
 
-                            // figura moze sie ruszyc na puste pole
+                            // chessman can move on empty square
                             if (chmToKill == null) {
                                 chm.teleport(this,i,j);
                                 if (this.isCheck(kingColor)) {
-                                    // cofnij ruch
+                                    // cancel move
                                     chm.teleport(this,prevCol,prevRow);
                                 } else {
-                                    // cofnij ruch
+                                    // cancel move
                                     chm.teleport(this,prevCol,prevRow);
                                     return false; // THIS IS NOT CHECKMATE !!!
                                 }
                             }
                             
-                            // figura moze sie ruszyc na wrogie pole zabijajac
+                            // chessman can move on the square killing other chessman
                             else {
                                 let index = this.indexOfChessmen(chmToKill.id);
                                 this.chessmen[index] = null;
                                 chm.teleport(this,i,j);
                                 if (this.isCheck(kingColor)) {
-                                    // cofnij ruch
+                                    // cancel move
                                     this.chessmen[index] = chmToKill;
                                     chm.teleport(this,prevCol,prevRow);
                                 } else {
-                                    // cofnij ruch
+                                    // cancel move
                                     this.chessmen[index] = chmToKill;
                                     chm.teleport(this,prevCol,prevRow);
                                     return false; // THIS IS NOT CHECKMATE !!!
@@ -221,7 +218,7 @@ class Game {
             return false;
         }
 
-        // wyprobuj wszystkie posuniecia, jesli nie ma ruchu, to jest pat
+        // try to make all possible moves, if there is no legal move it is stalemate
         for (let chm of this.validChessmen()) {
             if (chm.color == kingColor) {
 
@@ -243,31 +240,31 @@ class Game {
     }
 
 
-    isDeadPosition() { // pat
+    isDeadPosition() {
 
-        // zadna ze stron nie ma materialu na danie mata
+        // none of players has material to checkmate
 
         // WHITE
-        if ((this.hasChessman(color.WHITE,type.PAWN) >= 1)   // promocja
-         || (this.hasChessman(color.WHITE,type.ROOK) >= 1)   // wieza
-         || (this.hasChessman(color.WHITE,type.QUEEN) >= 1)  // hetman
-         || (this.hasChessman(color.WHITE,type.BISHOP) >= 2) // dwa gonce
-         || (                                                // goniec i skoczek
-            (this.hasChessman(color.WHITE,type.BISHOP) >= 1)
-            && (this.hasChessman(color.WHITE,type.KNIGHT) >= 1)
+        if ((this.hasChessman(enums.color.WHITE,enums.type.PAWN) >= 1)   // promotion
+         || (this.hasChessman(enums.color.WHITE,enums.type.ROOK) >= 1)   // rook
+         || (this.hasChessman(enums.color.WHITE,enums.type.QUEEN) >= 1)  // queen
+         || (this.hasChessman(enums.color.WHITE,enums.type.BISHOP) >= 2) // 2x bishop
+         || (                                                // knight & bishop
+            (this.hasChessman(enums.color.WHITE,enums.type.BISHOP) >= 1)
+            && (this.hasChessman(enums.color.WHITE,enums.type.KNIGHT) >= 1)
          ))
         {
             return false;
         }
 
         // BLACK
-        if ((this.hasChessman(color.BLACK,type.PAWN) >= 1)   // promocja
-         || (this.hasChessman(color.BLACK,type.ROOK) >= 1)   // wieza
-         || (this.hasChessman(color.BLACK,type.QUEEN) >= 1)  // hetman
-         || (this.hasChessman(color.BLACK,type.BISHOP) >= 2) // dwa gonce
-         || (                                                // goniec i skoczek
-            (this.hasChessman(color.BLACK,type.BISHOP) >= 1)
-            && (this.hasChessman(color.BLACK,type.KNIGHT) >= 1)
+        if ((this.hasChessman(enums.color.BLACK,enums.type.PAWN) >= 1)   // promotion
+         || (this.hasChessman(enums.color.BLACK,enums.type.ROOK) >= 1)   // rook
+         || (this.hasChessman(enums.color.BLACK,enums.type.QUEEN) >= 1)  // queen
+         || (this.hasChessman(enums.color.BLACK,enums.type.BISHOP) >= 2) // 2x bishop
+         || (                                                // knight & bishop
+            (this.hasChessman(enums.color.BLACK,enums.type.BISHOP) >= 1)
+            && (this.hasChessman(enums.color.BLACK,enums.type.KNIGHT) >= 1)
          ))
         {
             return false;
@@ -277,14 +274,18 @@ class Game {
     }
 
     // generator
-    // lista jest z dziurami, wiec odfiltrowujemy nulle
+    // chessmen array contains nulls, filter for not null
     * validChessmen() {
         for (let chm of this.chessmen) {
             if (chm != null) yield chm;
         }
     }
 
-    // BIERZE ID A NIE FIGURE !!!
+    /**
+     * chessman id -> index in chessmen array
+     * @param {number} chessmanID chessman id
+     * @returns {number} index in array
+     */
     indexOfChessmen(chessmanID) {
         for (let i=0; i<this.chessmen.length; i++) {
             if ((this.chessmen[i] != null) 
@@ -294,6 +295,10 @@ class Game {
         return null;
     }
 
+    /** 
+     * @param {number} id 
+     * @returns {chessmen.Chessman}
+     */
     chessmanWithId(id) {
 
         for (let chm of this.validChessmen()) {
@@ -304,6 +309,11 @@ class Game {
         return null;
     }
 
+    /**
+     * @param {number} col 
+     * @param {number} row 
+     * @returns {chessmen.Chessman}
+     */
     chessmanAtPos(col,row) {
 
         for (let chm of this.validChessmen()) {
@@ -314,8 +324,10 @@ class Game {
         return null;
     }
 
-    
-
+    /**
+     * set null to index in chessmen array
+     * @param {chessmen.Chessman} chm 
+     */
     deleteChessman(chm) {
         
         for (let i=0; i<this.chessmen.length; i++) {
@@ -330,11 +342,9 @@ class Game {
     }
 
     capture(chm) {
-        // TODO !!!
+        // TODO -> add points
         this.deleteChessman(chm);
     }
-
-
 
     toString() {
         return `${this.player1.onlinePlayer.name} vs ${this.player2.onlinePlayer.name}`;
@@ -347,31 +357,31 @@ function initChessmen() {
 
     // WHITE    
     for (let i = 1; i <= 8; i++) {
-        chessmen.push(new Pawn(i,i,2,color.WHITE));
+        chessmen.push(new Pawn(i,i,2,enums.color.WHITE));
     }
     
-    chessmen.push(new Knight(9,2,1,color.WHITE));
-    chessmen.push(new Knight(10,7,1,color.WHITE));
-    chessmen.push(new Bishop(11,3,1,color.WHITE));
-    chessmen.push(new Bishop(12,6,1,color.WHITE));
-    chessmen.push(new Rook(13,1,1,color.WHITE));
-    chessmen.push(new Rook(14,8,1,color.WHITE));
-    chessmen.push(new Queen(15,4,1,color.WHITE));
-    chessmen.push(new King(16,5,1,color.WHITE));
+    chessmen.push(new Knight(9,2,1,enums.color.WHITE));
+    chessmen.push(new Knight(10,7,1,enums.color.WHITE));
+    chessmen.push(new Bishop(11,3,1,enums.color.WHITE));
+    chessmen.push(new Bishop(12,6,1,enums.color.WHITE));
+    chessmen.push(new Rook(13,1,1,enums.color.WHITE));
+    chessmen.push(new Rook(14,8,1,enums.color.WHITE));
+    chessmen.push(new Queen(15,4,1,enums.color.WHITE));
+    chessmen.push(new King(16,5,1,enums.color.WHITE));
 
     // BLACK    
     for (let i = 17; i <= 24; i++) {
-        chessmen.push(new Pawn(i,i-16,7,color.BLACK));
+        chessmen.push(new Pawn(i,i-16,7,enums.color.BLACK));
     }
     
-    chessmen.push(new Knight(25,2,8,color.BLACK));
-    chessmen.push(new Knight(26,7,8,color.BLACK));
-    chessmen.push(new Bishop(27,3,8,color.BLACK));
-    chessmen.push(new Bishop(28,6,8,color.BLACK));
-    chessmen.push(new Rook(29,1,8,color.BLACK));
-    chessmen.push(new Rook(30,8,8,color.BLACK));
-    chessmen.push(new Queen(31,4,8,color.BLACK));
-    chessmen.push(new King(32,5,8,color.BLACK));
+    chessmen.push(new Knight(25,2,8,enums.color.BLACK));
+    chessmen.push(new Knight(26,7,8,enums.color.BLACK));
+    chessmen.push(new Bishop(27,3,8,enums.color.BLACK));
+    chessmen.push(new Bishop(28,6,8,enums.color.BLACK));
+    chessmen.push(new Rook(29,1,8,enums.color.BLACK));
+    chessmen.push(new Rook(30,8,8,enums.color.BLACK));
+    chessmen.push(new Queen(31,4,8,enums.color.BLACK));
+    chessmen.push(new King(32,5,8,enums.color.BLACK));
 
     return chessmen;
 }

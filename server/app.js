@@ -1,25 +1,26 @@
+// ----- pkg -----
+const http          = require('http');
+const express       = require('express');
+const mssql         = require('mssql');
+const cookieParser  = require('cookie-parser');
 
-var http = require('http');
-var express = require('express');
-var mssql = require('mssql');
-var cookieParser = require('cookie-parser');
+// ----- custom -----
+const dbManager     = require('./dbmanager.js');
+const sm            = require('./servermanager.js');
+const membership    = require('./membership.js');
 
-var dbManager = require('./dbmanager.js');
-const sm = require('./servermanager.js');
-const membership = require('./membership.js');
-
-
+// ----- globals -----
 const secretKey = 'foobarbaz12345';
-
-var app = express();
+const app = express();
+const config = JSON.parse("../config.json");
 
 function configureServer() {
 
     app.set('view engine', 'ejs');
     app.set('views', './views');
-    app.use(express.urlencoded({extended:true}));
-    app.use(express.static('public'))
-    app.use(cookieParser(secretKey));
+    app.use(express.urlencoded( { extended:true } ));
+    app.use(express.static( 'public' ))
+    app.use(cookieParser( config.cookieParser.secret ));
 
     var server = http.createServer(app);
 
@@ -37,11 +38,8 @@ function configureServer() {
     app.get("/game", membership.authorize, (req, res) => {
 
         var c = req.signedCookies['authentication'];
-        
-
         var username = c.username;
         if (!c.logged) username += ' (niezalogowany)';
-
 
         res.render("game", { username });
 
@@ -71,7 +69,6 @@ function configureServer() {
         }
 
     });
-
 
     // ***** ***** *****
     // ----- LOGIN -----
@@ -150,9 +147,8 @@ function configureServer() {
     });
 
 
-
-
-
+    // ***** ***** *****
+    // -----  404  -----
     app.use((req,res,next) => {
         res.render('404', { url : req.url });
     });
@@ -162,8 +158,6 @@ function configureServer() {
 }
 
 
-
-
 (async function main() {
 
     try {
@@ -171,7 +165,7 @@ function configureServer() {
         var server = configureServer();
         server.listen(process.env.PORT || 3000);
         //await dbManager.connectToDatabase(dbManager.mode.DISABLED); // nie lacz sie do bazy danych
-        await dbManager.connectToDatabase(dbManager.mode.MSSQL);
+        await dbManager.connectToDatabase(dbManager.mode.MSSQL); // connect with MSSQL server
         sm.init(server);
 
     } catch(err) {
@@ -181,5 +175,4 @@ function configureServer() {
     }
 
 })();
-
 

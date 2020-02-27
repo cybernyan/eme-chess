@@ -1,5 +1,4 @@
-const { type, color } = require('./enums.js');
-
+const enums = require('./enums.js');
 
 /**
  * move(i,j), canMove(i,j)
@@ -20,8 +19,6 @@ class Chessman {
         this.row = row;
         this.type = type;
         this.color = color;
-        
-
         this.numOfMoves = 0;
     }
 
@@ -30,7 +27,13 @@ class Chessman {
     }
 
 
-    // zwraca true jesli sie udalo ruszyc (nie bylo szachu po ruchu)
+    /**
+     * returns true if moved successfully (no check after move)
+     * @param {Game} game 
+     * @param {number} col 
+     * @param {number} row 
+     * @returns {boolean}
+     */
     move(game,col,row) {
 
         let prevCol = this.col;
@@ -48,19 +51,24 @@ class Chessman {
         return true;
     }
 
-
-    // the same as move, but without changing state of numOfMoves
     teleport(game,col,row) {
         game.board[this.col][this.row] = 0; // clear
         this.col = col; this.row = row;
         game.board[this.col][this.row] = this.id;
     }
 
+    /**
+     * returns an information if chessman can move to (col,row)
+     * @param {Game} game 
+     * @param {number} col 
+     * @param {number} row 
+     * @returns {[boolean,Chessman]}
+     */
     standardCheck(game,col,row) {
-        var chm = game.chessmanAtPos(col,row);            
-        if (chm == null) return [true,null];
-        else if (chm.color == this.color) return [false,null];
-        else return [true,chm];    
+        var chm = game.chessmanAtPos(col,row);
+        if (chm == null) return [true,null];                    // free square
+        else if (chm.color == this.color) return [false,null];  // your chessman
+        else return [true,chm];                                 // opponent -> kill!
     }
 
     forbiddenMoveLog(col,row) {
@@ -73,7 +81,7 @@ class Chessman {
 class King extends Chessman {
 
     constructor(id,col,row,color) {
-        super(id,col,row,type.KING,color);
+        super(id,col,row,enums.type.KING,color);
     }
 
     name = "King";
@@ -100,13 +108,12 @@ class King extends Chessman {
         // short castle
         if ((this.col == 5 && col == 7)
          && (this.numOfMoves == 0)
-         && (game.isCheck(this.color) == false)) // czy ten krol jest szachowany?
+         && (game.isCheck(this.color) == false)) // is the king checked?
         {
-            if (this.color == color.WHITE)
+            if (this.color == enums.color.WHITE)
                 return TryToMakeShortCastle(game,this,14,col,row);
-            else if (this.color == color.BLACK)
+            else if (this.color == enums.color.BLACK)
                 return TryToMakeShortCastle(game,this,30,col,row);
-            
         }
 
         // long castle
@@ -114,27 +121,34 @@ class King extends Chessman {
          && (this.numOfMoves == 0)
          && (game.isCheck(this.color) == false))
         {
-            if (this.color == color.WHITE)
+            if (this.color == enums.color.WHITE)
                 return TryToMakeLongCastle(game,this,13,col,row);
-            else if (this.color == color.BLACK)
+            else if (this.color == enums.color.BLACK)
                 return TryToMakeLongCastle(game,this,29,col,row);
-
         }
 
 
         if (printLog)
             this.forbiddenMoveLog(col,row);
+
         return [false,null];
     }  
     
-
 }
 
 
-// sprawdza czy moze byc roszada
+/**
+ * Is it possible to make short castle?
+ * @param {Game} game 
+ * @param {King} king 
+ * @param {number} rookID id of rook (defined in board) 
+ * @param {number} destCol 
+ * @param {number} destRow 
+ * @returns {[Boolean,Chessman]}
+ */
 function TryToMakeShortCastle(game, king, rookID, destCol, destRow) {
 
-    // jesli ta wieza jest zabita
+    // if the rook is killed
     if (game.chessmanWithId(rookID) == null) {
         return [false,null];
     }
@@ -163,10 +177,17 @@ function TryToMakeShortCastle(game, king, rookID, destCol, destRow) {
 }
 
 
-// sprawdza czy moze byc dluga roszada
+/**
+ * Is it possible to make long castle?
+ * @param {Game} game 
+ * @param {King} king 
+ * @param {number} rookID id of rook (defined in board) 
+ * @param {number} destCol 
+ * @param {number} destRow 
+ */
 function TryToMakeLongCastle(game, king, rookID, destCol, destRow) {
 
-    // jesli ta wieza jest juz zbita
+    // if the rook is killed
     if (game.chessmanWithId(rookID) == null) {
         return [false,null];
     }
@@ -195,9 +216,7 @@ function TryToMakeLongCastle(game, king, rookID, destCol, destRow) {
     }
 }
 
-
-
-// check if king is checked when he tries to move
+// check if king is checked when it tries to move
 function canKingMakeCastle(chm,game,firstCol,secondCol) {
     var possible = true;
     chm.teleport(game,firstCol,chm.row);
@@ -208,22 +227,14 @@ function canKingMakeCastle(chm,game,firstCol,secondCol) {
 }
 
 
-
 class Queen extends Chessman {
 
     constructor(id,col,row,color) {
-        super(id,col,row,type.QUEEN,color);
+        super(id,col,row,enums.type.QUEEN,color);
     }
-
 
     name="Queen";
 
-
-    /** 
-     * @param {number} col
-     * @param {number} row
-     * @returns {boolean}
-     */
     canMove(game,col,row,printLog=true) {
 
         let [res,chm] = tryToMoveLikeRook(this,game,col,row,printLog);
@@ -249,16 +260,11 @@ class Queen extends Chessman {
 class Rook extends Chessman {
 
     constructor(id,col,row,color) {
-        super(id,col,row,type.ROOK,color);
+        super(id,col,row,enums.type.ROOK,color);
     }
 
     name="Rook";
 
-    /** 
-     * @param {number} col
-     * @param {number} row
-     * @returns {boolean}
-     */
     canMove(game,col,row,printLog=true) {
 
         let [res,chm] = tryToMoveLikeRook(this,game,col,row,printLog);
@@ -277,17 +283,12 @@ class Rook extends Chessman {
 class Bishop extends Chessman {
 
     constructor(id,col,row,color) {
-        super(id,col,row,type.BISHOP,color);
+        super(id,col,row,enums.type.BISHOP,color);
     }
 
     name = "Bishop";
     
-    /** 
-     * @param {number} col
-     * @param {number} row
-     * @returns {boolean}
-     */
-    canMove = function(game,col,row,printLog=true) {
+    canMove(game,col,row,printLog=true) {
 
         let [res,chm] = tryToMoveLikeBishop(this,game,col,row,printLog);
 
@@ -305,17 +306,11 @@ class Bishop extends Chessman {
 class Knight extends Chessman {
 
     constructor(id,col,row,color) {
-        super(id,col,row,type.KNIGHT,color);
+        super(id,col,row,enums.type.KNIGHT,color);
     }
 
     name = "Knight";
     
-
-    /** 
-     * @param {number} col
-     * @param {number} row
-     * @returns {boolean}
-     */
     canMove(game,col,row,printLog=true) {
 
         // normal move or capture
@@ -340,22 +335,17 @@ class Knight extends Chessman {
 class Pawn extends Chessman {
 
     constructor(id,col,row,color) {
-        super(id,col,row,type.PAWN,color);
+        super(id,col,row,enums.type.PAWN,color);
     }
 
     name="Pawn";
-    
 
-    /** 
-     * @param {number} col
-     * @param {number} row
-     */
     move(game,col,row) {
         var res = super.move(game,col,row);
         
         // promotion?
-        if ((this.color == color.WHITE && this.row == 8) 
-         || (this.color == color.BLACK && this.row == 1))
+        if ((this.color == enums.color.WHITE && this.row == 8) 
+         || (this.color == enums.color.BLACK && this.row == 1))
         {
             var chmToTransform = game.chessmanAtPos(col,row);
             var index = game.indexOfChessmen(chmToTransform.id);
@@ -364,13 +354,13 @@ class Pawn extends Chessman {
             var newChessman;
             var newId = game.freeId();
 
-            if (playerDecisionType == type.QUEEN) {
+            if (playerDecisionType == enums.type.QUEEN) {
                 newChessman = new Queen(newId,col,row,chmToTransform.color);
-            } else if (playerDecisionType == type.ROOK) {
+            } else if (playerDecisionType == enums.type.ROOK) {
                 newChessman = new Rook(newId,col,row,chmToTransform.color);
-            } else if (playerDecisionType == type.KNIGHT) {
+            } else if (playerDecisionType == enums.type.KNIGHT) {
                 newChessman = new Knight(newId,col,row,chmToTransform.color);
-            } else if (playerDecisionType == type.BISHOP) {
+            } else if (playerDecisionType == enums.type.BISHOP) {
                 newChessman = new Bishop(newId,col,row,chmToTransform.color);
             } else {
                 console.log("Unknown type of chessman...");
@@ -383,14 +373,9 @@ class Pawn extends Chessman {
         return res;
     }
 
-    /** 
-     * @param {number} col
-     * @param {number} row
-     * @returns {[boolean,chessmanToKill]}
-     */
     canMove(game,col,row,printLog=true) {
 
-        if (this.color == color.WHITE) {
+        if (this.color == enums.color.WHITE) {
 
             // 1 normal move
             if (col == this.col && row == this.row+1) {
@@ -427,7 +412,7 @@ class Pawn extends Chessman {
                     // is next to the pawn opposite pawn which made big move?
                     var chm = game.chessmanAtPos(this.col+1,this.row);
                     if ((chm != null) && (chm.numOfMoves == 1) && (chm.row == 5)
-                    && (chm.type == type.PAWN) && (chm.color == color.BLACK))
+                    && (chm.type == enums.type.PAWN) && (chm.color == enums.color.BLACK))
                         return [true,chm];
                 }
 
@@ -435,7 +420,7 @@ class Pawn extends Chessman {
                     // is next to the pawn opposite pawn which made big move?
                     var chm = game.chessmanAtPos(this.col-1,this.row);
                     if ((chm != null) && (chm.numOfMoves == 1) && (chm.row == 5)
-                    && (chm.type == type.PAWN) && (chm.color == color.BLACK))
+                    && (chm.type == enums.type.PAWN) && (chm.color == enums.color.BLACK))
                         return [true,chm];
                 }
             }
@@ -449,7 +434,7 @@ class Pawn extends Chessman {
 
         }
 
-        else if (this.color == color.BLACK) {
+        else if (this.color == enums.color.BLACK) {
 
             // 1 normal move
             if (col == this.col && row == this.row-1) {
@@ -490,7 +475,7 @@ class Pawn extends Chessman {
                     // is next to the pawn opposite pawn which made big move?
                     var chm = game.chessmanAtPos(this.col+1,this.row);
                     if ((chm != null) && (chm.numOfMoves == 1) && (chm.row == 4)
-                    && (chm.type == type.PAWN) && (chm.color == color.WHITE))
+                    && (chm.type == enums.type.PAWN) && (chm.color == enums.color.WHITE))
                         return [true,chm];
                 }
 
@@ -498,7 +483,7 @@ class Pawn extends Chessman {
                     // is next to the pawn opposite pawn which made big move?
                     var chm = game.chessmanAtPos(this.col-1,this.row);
                     if ((chm != null) && (chm.numOfMoves == 1) && (chm.row == 4)
-                    && (chm.type == type.PAWN) && (chm.color == color.WHITE))
+                    && (chm.type == enums.type.PAWN) && (chm.color == enums.color.WHITE))
                         return [true,chm];
                 }
 
@@ -608,10 +593,9 @@ function tryToMoveLikeBishop(thisChessman,game,col,row,printLog=true) {
 
         }
 
-        return [undefined,undefined];
+    // it was not move like a bishop...
+    return [undefined,undefined];
 }
-
-
 
 function tryToMoveLikeRook(thisChessman,game,col,row,printLog=true) {
 

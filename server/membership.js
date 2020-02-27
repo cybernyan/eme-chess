@@ -1,12 +1,14 @@
 const http = require('http');
-const dbmanager = require('./dbmanager.js');
-
 const crypto = require('crypto');
-const iterations = 1000;
-const keylen = 32;
-const digest = 'sha256';
-const encoding = 'base64';
-const salt = Buffer.from("O1y5mTgDgCad9bdKSn7b",encoding);
+
+const dbmanager = require('./dbmanager.js');
+const config = JSON.parse('../config.json')
+
+const iterations = config.membership.iterations;
+const keylen = config.membership.keylen;
+const digest = config.membership.digest;
+const encoding = config.membership.encoding;
+const salt = Buffer.from( config.membership.salt ,encoding);
 
 /**
 *

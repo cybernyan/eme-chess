@@ -1,26 +1,26 @@
-var mssql = require('mssql');
-var enums = require('./enums.js');
+const mssql = require('mssql');
+const enums = require('./enums.js');
 
 var connection;
-const UNLOGGED = "Niezalogowany";
 var dbMode;
+
 var activated = false;
+const UNLOGGED = "Niezalogowany";
+const config = JSON.parse("../config.json");
 
-
-// w jaki jest serwer bazy danych
+// which db server?
 var mode = {
-    NONE: "", // niepolaczony
-    DISABLED: "DISABLED", // tryb bez bazy danych
-    MSSQL: "MSSQL", // mssql server
-    POSTGRESQL: "POSTGRESQL" // postgres
+    NONE: "",                   // not connected yet
+    DISABLED: "DISABLED",       // no database mode
+    MSSQL: "MSSQL",             // mssql server
+    POSTGRESQL: "POSTGRESQL"    // postgres
 }
 
-
 function isActive() {
-    
     return activated;
 }
 
+// FIXME - implemented only for MSSQL Server
 async function connectToDatabase(dbManagerMode) {
 
     dbMode = dbManagerMode;
@@ -50,14 +50,7 @@ async function connectToDatabase(dbManagerMode) {
         return;
     }
 
-    var config = {
-        user: 'sa',
-        password: 'password123',
-        server: 'localhost', 
-        database: 'WEPPO_CHESS' 
-    };
-
-    connection = new mssql.ConnectionPool(config);
+    connection = new mssql.ConnectionPool(config.MSSQL);
 
     try {
         await connection.connect();

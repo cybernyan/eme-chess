@@ -3,7 +3,7 @@
 
 <head>
     <meta chaset="utf-8" />
-    <title>chess</title>
+    <title>My Chess</title>
     <script src="javascript/socket.io.js"></script>
     <script src="javascript/board.js"></script>
     <script src="javascript/socket.js"></script>
@@ -17,7 +17,7 @@
     <div id="external">
 
         <header class="container outside">
-            <h2 class="align-left">CHESS</h2>
+            <h2 class="align-left">MY CHESS</h2>
             <div class="align-right">
                 <div>Użytkownik: <%= locals.username %></div>
                 <form method="GET" action="/logout">
@@ -42,7 +42,7 @@
                     <div id="games"></div>
                 </div>
                 <div class="inside-container">
-                    <div>twoje statystyki:</div>
+                    <!-- <div>twoje statystyki:</div> TODO na heroku nie ma bazy danych -->
                     <div id="yourStats"></div>        
                 </div>
 
@@ -51,8 +51,8 @@
             <main>
                 <div id="centerbox_buttons" class="inside-container">
                     <input type="submit" onclick="send()" value="Nowa gra">
-                    <input type="submit" onclick="drawRequest()" value="Zaproponuj remis">
-                    <input type="submit" onclick="giveUp()" value="Poddaj się">
+                    <!-- <input type="submit" onclick="drawRequest()" value="Zaproponuj remis"> TODO bug -->
+                    <!-- <input type="submit" onclick="giveUp()" value="Poddaj się"> TODO bug -->
                 </div>
                 <div id=canvasDiv>
                     <canvas id="myCanvas" width="512" height="512"></canvas>

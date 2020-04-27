@@ -18,7 +18,7 @@
 
 <main>
     Strona główna
-
+<!-- TODO na heroku nie ma darmowej bazy danych, dziala tylko na localhoscie
     <div>
         <form id="loginForm" method="POST" action="/login">
             <p>Zaloguj się:</p>
@@ -53,8 +53,9 @@
             <input type="submit" value="Zarejestruj" />
         </form>
     </div>
+-->
     <div>
-        <form id="noRegistrationForm" method="POST" action="/noRegistration">
+        <form id="noRegistrationForm" method="POST" action="/noRegistration" style="display: flex; flex-direction: column;">
             <p>Kontynuuj bez rejestracji</p>
             <div>
                 Nick: <input id="noRegistrationNick" name="noRegistrationNick" type="text" />
@@ -62,7 +63,7 @@
             </div>
             <div id="noRegistrationError" class="errorMessage"><%= locals.noRegistrationError %></div>
             <input type="submit" value="Kontynuuj" />
-            <p>Nie będą wtedy prowadzone Twoje statystyki!</p>
+            <!-- <p>Nie będą wtedy prowadzone Twoje statystyki!</p> -->
         </form>
     </div>
 

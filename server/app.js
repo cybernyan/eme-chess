@@ -164,8 +164,8 @@ function configureServer() {
     try {
         var server = configureServer();
         server.listen(process.env.PORT || 3000);
-        //await dbManager.connectToDatabase(dbManager.mode.DISABLED); // nie lacz sie do bazy danych
-        await dbManager.connectToDatabase(dbManager.mode.MSSQL); // connect with MSSQL server
+        await dbManager.connectToDatabase(dbManager.mode.DISABLED); // nie lacz sie do bazy danych
+        //await dbManager.connectToDatabase(dbManager.mode.MSSQL); // connect with MSSQL server
         sm.init(server);
 
     } catch(err) {

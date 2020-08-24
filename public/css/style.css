@@ -338,6 +338,8 @@ screen and (max-width: 800px) {
     }
     div#center-div-buttons {
         justify-content: space-between;
+        flex-grow: 1;
+        align-items: flex-end;
     }
 
     #left-aside, #right-aside {
@@ -349,6 +351,8 @@ screen and (max-width: 800px) {
         align-self: stretch;
         align-items: stretch;
     }
+
+
 
     a, button {
         padding: 1em 2em;

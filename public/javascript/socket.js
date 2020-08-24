@@ -1,11 +1,13 @@
 
+var infoColor = 'green';
+var errorColor = 'red;'
 
 socket.on('updateUsers', function(connectedUsersHtml,waitingUsersHtml,gamesHtml) {
 
-    var connectedUsers = document.getElementById("connectedUsers");
+    var connectedUsers = document.getElementById("connected-users-list");
     connectedUsers.innerHTML = connectedUsersHtml;
-
-    var waitingUsers = document.getElementById("waitingUsers");
+    
+    var waitingUsers = document.getElementById("in-lobby-list");
     waitingUsers.innerHTML = waitingUsersHtml;
 
     var games = document.getElementById("games");
@@ -31,35 +33,37 @@ socket.on('updateChessboard', function(data,madeMove) {
 });
 
 socket.on('moveRejected', function(data) {
-    addInfo("Move rejected: " + data);
+    addInfo("Move rejected: " + data,errorColor);
 });
 
 socket.on('closeGame', function(reason) {
-    addInfo("Game finished because of " + reason);
+    gameActive = false;
+    addInfo("Game finished because of " + reason,errorColor);
 });
 
 
 socket.on('checkmate', function() {
-    addInfo("Checkmate");
+    addInfo("Checkmate",infoColor);
 });
 
 socket.on('stalemate', function() {
-    addInfo("Stalemate");
+    addInfo("Stalemate",infoColor);
 });
 
 socket.on('check', function() {
-    addInfo("Check");
+    addInfo("Check",infoColor);
 });
 
 socket.on('trippledraw', function() {
-    addInfo("Tripple Draw !!");
+    addInfo("Tripple Draw !",infoColor);
 });
 
 
 
 socket.on('startGame', function(color) {
-    setInfo("START A NEW GAME<br/>");
+    addInfo("New game started.",infoColor);
     playerColor = color;
+    gameActive = true;
 });
 
 function changePromotion(type) {
@@ -78,18 +82,14 @@ function send() {
     socket.emit("startRequest");
 }
 
-function setInfo(str) {
-    var infoDiv = document.getElementById('log');
-    infoDiv.innerHTML = str;
-}
 
-function addInfo(str) {
-    if (str == undefined) {
-        return;
-    }
+function addInfo(str,color) {
+
+    if (str == undefined) return;
 
     var infoDiv = document.getElementById('log');
-    infoDiv.innerHTML += str + "<br/>";
+    var styleColor = ' style="color: ' + color + ';"';
+    infoDiv.innerHTML += `<div${color ? styleColor : ""}>${str}</div>`;
     infoDiv.scrollTop = infoDiv.scrollHeight - infoDiv.clientHeight;
 }
 

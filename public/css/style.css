@@ -5,79 +5,264 @@ body {
     background-repeat: no-repeat;
     background-position: 50% 0;
     background-attachment: fixed;
-    height: 200vh;
-    font-size: 2.0vh;
+
+    /*height: 200vh;*/
+    font-size: 12px;
     letter-spacing: 0.1em;
     font-family: 'Lusitana', serif;
-    text-shadow: 0.0em 0.1em 0.1em black, 0.1em 0.2em 0.5em black, 0.1em 0.2em 0.5em black;
+    
+    text-shadow: 
+        0.0em 0.1em 0.1em black, 
+        0.1em 0.2em 0.5em black, 
+        0.1em 0.2em 0.5em black;
+ 
+        margin: 0;
+        padding: 0;
+
+    min-height: 100vh;
+    max-height: 100vh;
+    color: #a79e9e;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+
+}
+
+#panel {
+
     margin: 0;
-    color: #a79e9e
-}
-
-.outside {
-    width: 75%;
-}
-
-.container {
+    padding: 0;
     background-image: url("../img/DivBackground.png");
+    background-size: 100% auto;
+
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
 
     border-style: double;
     border-color: rgba(72,64,80,0.75);
-    border-radius: 20px;
 
-    padding: 10px;
-    
+    border-top: none;
+    border-bottom: none;
+    /* TODO shadow */
+
 }
 
-
-.inside-container {
-    padding: 10px;
-    margin: 5px;
+#connected-users {
+    height: 200px;
+    display: flex;
+    flex-direction: column;
 }
 
+#in-lobby {
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+}
+
+#being-played {
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+@media screen and (max-width: 1200px) {
+    #panel {
+      width: 100%;
+    }
+  }
 
 main {
-    position: center;
-    margin: auto;
-    padding: 3em;
-    right: 5vh;
-    top: 3vh;
-    width: 85%;
-    max-width: 900px;
-    height: auto;
-    box-sizing: border-box;
-    border: 4px double rgba(72,64,80,0.75);
-    border-radius: 10px;
-    box-shadow: 0.1em 0.5em 2em black;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: stretch;
+    
+    flex-grow: 1;
+
 }
 
 header {
-    position: relative;
-    height: 50px;
-    width: 80%;
-    background-color: darkgray;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+#header-left {
+    margin: 5px;
+    padding: 10px;
+    margin-left: 10px;
+}
+
+#header-right {
+    display: flex;
+    margin: 5px;
+    padding: 5px;
+    align-items: center;
+}
+
+#nick-info {
+    margin: 10px;
+}
+
+
+footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+footer>p {
+    margin: 5px 10px;
+}
+
+aside {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: auto;
+    flex-basis: 200px;
+
+    max-width: 300px;
+
+    padding: 10px;
+    border: 2px solid black;
+    /*margin-top: 10px;*/
+
+    background-image: linear-gradient(30deg, #141414, #1f1d1d);
+
+}
+
+aside#right-aside {
+
+    border-right: none;
+    border-top-left-radius: 100px;
+    margin-bottom: 5px;
+    border-bottom-left-radius: 40px;
+
+    display: flex; flex-direction: column;
+}
+
+aside#left-aside {
+
+    border-left: none;
+    border-top-right-radius: 100px;
+    margin-bottom: 5px;
+    border-bottom-right-radius: 40px;
+}
+
+
+div#center-div {
+    max-height: 100%;
+
+    flex-basis: auto;
+    flex-shrink: 1;
+    flex-grow: 8;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+div#center-div-buttons {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.panel-button {
+    display: none;
+}
+
+/* SCROLLED LIST */
+.scrolled-list {
+    border: solid 2px #1a1b1a;
+    overflow-y: scroll;
+    flex-grow: 1;
+
+    overflow-x: hidden;
+
+    margin: 0;
+    padding: 0;
+    background-color: #222423;
+}
+.scrolled-list>span {
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    resize: horizontal;
+    
+}
+
+.scrolled-list>span:nth-child(even) {
+    background-color: #2e302f;
+
 }
 
 
 
-.align-left {
-    position: absolute;
-    left: 10px;
+
+
+aside>div>h3 {
+    margin-bottom: 3px;
+    margin-top: 20px;
 }
 
-.align-right {
-    position: absolute;
-    right: 10px;
+/* MOBILE OVERLAY */
+@media screen and (max-width: 900px) {
+    .panel-button {
+      display: block;
+    }
+    div#center-div-buttons {
+        justify-content: space-between;
+    }
+
+    aside#left-aside {
+        display: none;
+    }
+    aside#right-aside {
+        display: none;
+    }
+
+  }
+
+
+
+#rightaside-buttons {
+    margin: 5px;
+    display: flex;
+    align-self: center;
+}
+
+#right-aside>p {
+    font-size: 1.3rem;
+    margin-top: 30px;
+    margin-bottom: 0px;
+    align-self: center;
+}
+
+#rightaside-buttons>button {
+    font-size: 8pt;
+    padding: 3px;
+}
+
+
+.container {
+    border: solid 1px white;
 }
 
 
 
 
-
-
-
-
-
+#canvas-div {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /*position: relative;
+    padding-top: 100%;*/
+}
 
 
 #content {
@@ -90,60 +275,8 @@ header {
 }
 
 
-#external {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-main {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-
-    max-width: 700px;
-    max-height: auto;
-
-    min-width: 512px;
-    min-height: auto;
-}
-
-aside#rightaside {
-
-    min-width: 300px;
-    min-height: auto;
-
-    max-width: 400px;
-    min-height: auto;
-}
-
-aside#leftaside {
-    
-    min-width: 300px;
-    min-height: auto;
-
-    max-width: 400px;
-    min-height: auto;
-
-}
 
 
-footer {
-
-    width: 1200px;
-}
-
-main>div#canvasDiv {
-
-    width: 512px;
-    height: 512px;
-
-
-    border:1px solid #000000;
-
-}
 
 
 .errorMessage {
@@ -152,6 +285,49 @@ main>div#canvasDiv {
 }
 
 #log {
-    height: 500px;
     overflow-y: auto;
+    flex-grow: 1;
+    border-radius: 5px;
+    border-bottom-left-radius: 30px;
+}
+
+
+
+
+
+a {
+    text-decoration: none;
+    text-shadow: none;
+    border-style: solid;
+    border-width: 2px;
+
+}
+
+/* BUTTONS */ 
+a.button, button {
+    border-color: #a79e9e;
+    display: inline-block;
+    padding: 0.7em 1.4em;
+    margin: 0 0.3em 0.3em 0;
+    border-radius: 0.15em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Roboto',sans-serif;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: #a79e9e;
+    background-color: #222423;
+    box-shadow: inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+    text-align: center;
+    position: relative;
+}
+
+a.button, button:active {
+    top:0.1em;
+}
+@media all and (max-width:30em){
+  a.button, button {
+    display:block;
+    margin:0.4em auto;  
+  }
 }

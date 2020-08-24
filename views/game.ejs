@@ -12,74 +12,67 @@
 
 <body onload="init()">
 
-
-
-    <div id="external">
-
-        <header class="container outside">
-            <h2 class="align-left">MY CHESS</h2>
-            <div class="align-right">
-                <div>Użytkownik: <%= locals.username %></div>
-                <form method="GET" action="/logout">
-                    <input type="submit" value="Wyloguj">
-                </form>
-            </div>
-        </header>
-
-        <div id="content" class="container outside">
-
-            <aside id="leftaside">
-                <div class="inside-container">
-                    <div>Połączeni użytkownicy:</div>
-                    <div id="connectedUsers"></div>
-                </div>
-                <div class="inside-container">
-                    <div>w poczekalni:</div>
-                    <div id="waitingUsers"></div>
-                </div>
-                <div class="inside-container">
-                    <div>rozgrywane gry:</div>
-                    <div id="games"></div>
-                </div>
-                <div class="inside-container">
-                    <!-- <div>twoje statystyki:</div> TODO na heroku nie ma bazy danych -->
-                    <div id="yourStats"></div>        
-                </div>
-
-            </aside>
-
-            <main>
-                <div id="centerbox_buttons" class="inside-container">
-                    <input type="submit" onclick="send()" value="Nowa gra">
-                    <!-- <input type="submit" onclick="drawRequest()" value="Zaproponuj remis"> TODO bug -->
-                    <!-- <input type="submit" onclick="giveUp()" value="Poddaj się"> TODO bug -->
-                </div>
-                <div id=canvasDiv>
-                    <canvas id="myCanvas" width="512" height="512"></canvas>
-                </div>
-            </main>
-
-            <aside id="rightaside">
-                <div id="rightaside_buttons" class="inside-container">
-                    <input type="submit" onclick="changePromotion('queen')" value="QUEEN">
-                    <input type="submit" onclick="changePromotion('rook')" value="ROOK">
-                    <input type="submit" onclick="changePromotion('knight')" value="KNIGHT">
-                    <input type="submit" onclick="changePromotion('bishop')" value="BISHOP">            
-                </div>
-                <div id="log" class="inside-container">
-                    INFO<br>
-                </div>
-            </aside>
-
+    <div id="panel">
+    <header class="">
+        <h2 id="header-left">MY CHESS</h2>
+        <div id="header-right">
+            <div id="nick-info"><%= locals.username %></div>
+            <a href="/logout" class="button">Logout</a>
+            
         </div>
+    </header>
 
-        <footer class="container outside">
-            Bartłomiej Grochowski 2020
-        </footer>
+    <main class="">
 
+        <aside id="left-aside">
+            <div id="connected-users">
+                <h3>Connected users:</h3>
+                <div id="connected-users-list" class="scrolled-list"></div>
+            </div>
+            <div id="in-lobby">
+                <h3>Users in lobby:</h3>
+                <div id="in-lobby-list" class="scrolled-list"></div>
+            </div>
+            <div id="being-played">
+                <h3>Games:</h3>
+                <div id="games" class="scrolled-list"></div>
+            </div>
+
+        </aside>
+
+        <div id="center-div">
+            <div id="center-div-buttons">
+                <button class="panel-button">left</button>
+                <!--<input type="submit" onclick="send()" value="Nowa gra">-->
+                <button onclick="send()">Nowa gra</button>
+                <button class="panel-button">right</button>
+                <!--<input type="submit" onclick="drawRequest()" value="Zaproponuj remis"> -->
+                <!--<input type="submit" onclick="giveUp()" value="Poddaj się"> -->
+            </div>
+            <div id="canvas-div">
+                <canvas id="myCanvas" width="512" height="512"></canvas>
+                <!--<div class="test">s</div>-->
+            </div>
+        </div>
+    
+        <aside id="right-aside">
+            <p>Autopromotion</p>
+            <div id="rightaside-buttons">
+                <button onclick="changePromotion('queen')">QUEEN</button>
+                <button onclick="changePromotion('rook')">ROOK</button>
+                <button onclick="changePromotion('knight')">KNIGHT</button>
+                <button onclick="changePromotion('bishop')">BISHOP</button>
+            </div>
+            <div id="log" class="scrolled-list"></div>
+        </aside>
+
+    </main>
+
+    <footer class="">
+        <p>Bartłomiej Grochowski 2020</p>
+        <p>Github</p>
+    </footer>
     </div>
-
-
 
     <img id='boardPng' src="img/board1.png" hidden="true">
     <img id='chessmenPng' src="img/chessmen1.png" hidden="true">

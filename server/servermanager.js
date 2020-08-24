@@ -45,7 +45,7 @@ var io;
  */
 function getConnectedUsersHtml() {
 
-    var html = "<div>\r\n"
+    var html = "\r\n"
 
     if (connectedUsers == null) {
         return "";
@@ -55,11 +55,9 @@ function getConnectedUsersHtml() {
     for (let i=0; i<connectedUsers.length; i++) {
         if (connectedUsers[i] != null) {
             usersCnt++;
-            html += `  <div>${usersCnt}. ${connectedUsers[i].toString()}</div>\r\n`;
+            html += `  <span>${i+1}. ${connectedUsers[i].toString()}</span>\r\n`;
         }
     }
-
-    html += "</div>";
 
     return html;
 }
@@ -207,7 +205,7 @@ function getGamesHtml() {
     for (let i=0; i<games.length; i++) {
         if (games[i] != null) {
             gamesCnt++;
-            html += `  <div>${gamesCnt}. ${games[i].toString()}</div>\r\n`;
+            html += `  <span>${gamesCnt}. ${games[i].toString()}</span>\r\n`;
         }
     }
 
@@ -222,7 +220,7 @@ function getWaitingUsersHtml() {
 
     var html = "<div>\r\n"
     for (let i=0; i<waitingRoom.length; i++) {
-        html += `  <div>${i+1}. ${waitingRoom[i].name}</div>\r\n`;
+        html += `  <span>${i+1}. ${waitingRoom[i].name}</span>\r\n`;
     }
 
     html += "</div>";
@@ -442,7 +440,7 @@ function handleRequests(socket) {
             return;
         }
 
-        var madeMove = `${chm.name}[${String.fromCharCode(chm.row + 96)}${chm.col}]`;
+        var madeMove = `${chm.name} [${String.fromCharCode(chm.row + 96)}${chm.col}]`;
         let [res, chmToKill] = chm.canMove(game, col, row);
 
         // if move is allowed
@@ -477,7 +475,7 @@ function handleRequests(socket) {
             game.numberOfMoves++;
             game.moves.push(madeMove);
             game.switchActualPlayer();
-            emitToGame(game,'updateChessboard', game.chessmen, '(' + Math.ceil(game.numberOfMoves / 2) + ')' + madeMove);
+            emitToGame(game,'updateChessboard', game.chessmen, '(' + Math.ceil(game.numberOfMoves / 2) + ') ' + madeMove);
 
             // IS CHECK ?
             var isCheck = game.isCheck(game.actualPlayer.color);

@@ -317,13 +317,6 @@ a.button, button {
 a.button, button:active {
     top:0.1em;
 }
-@media all and (max-width:30em){
-    a.button, button {
-      display:block;
-      margin:0.4em auto;  
-    }
-  }
-
 
   
 @media screen and (max-width: 1200px) {
@@ -354,6 +347,12 @@ screen and (max-width: 800px) {
     div#center-div {
         width: 100%;
         align-self: stretch;
+        align-items: stretch;
+    }
+
+    a, button {
+        padding: 1em 2em;
+        font-size: 1.4rem;
     }
     
 

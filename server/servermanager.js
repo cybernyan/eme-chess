@@ -199,7 +199,7 @@ function deleteGame(game) {
  */
 function getGamesHtml() {
 
-    var html = "<div>\r\n"
+    var html = "\r\n"
 
     var gamesCnt = 0;
     for (let i=0; i<games.length; i++) {
@@ -209,7 +209,7 @@ function getGamesHtml() {
         }
     }
 
-    html += "</div>";
+    html += "";
     return html;
 }
 
@@ -218,12 +218,12 @@ function getGamesHtml() {
  */
 function getWaitingUsersHtml() {
 
-    var html = "<div>\r\n"
+    var html = "\r\n"
     for (let i=0; i<waitingRoom.length; i++) {
         html += `  <span>${i+1}. ${waitingRoom[i].name}</span>\r\n`;
     }
 
-    html += "</div>";
+    html += "";
     return html;
 }
 

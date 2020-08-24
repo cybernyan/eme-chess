@@ -14,9 +14,9 @@
 
     <div id="panel">
     <header class="">
-        <h2 id="header-left">MY CHESS</h2>
+        <h1 id="header-left">MY CHESS</h2>
         <div id="header-right">
-            <div id="nick-info"><%= locals.username %></div>
+            <h2 id="nick-info"><%= locals.username %></h2>
             <a href="/logout" class="button">Logout</a>
             
         </div>
@@ -26,15 +26,15 @@
 
         <aside id="left-aside">
             <div id="connected-users">
-                <h3>Connected users:</h3>
+                <p>Connected users:</p>
                 <div id="connected-users-list" class="scrolled-list"></div>
             </div>
             <div id="in-lobby">
-                <h3>Users in lobby:</h3>
+                <p>Users in lobby:</p>
                 <div id="in-lobby-list" class="scrolled-list"></div>
             </div>
             <div id="being-played">
-                <h3>Games:</h3>
+                <p>Games:</p>
                 <div id="games" class="scrolled-list"></div>
             </div>
 
@@ -43,15 +43,11 @@
         <div id="center-div">
             <div id="center-div-buttons">
                 <button class="panel-button">left</button>
-                <!--<input type="submit" onclick="send()" value="Nowa gra">-->
                 <button onclick="send()">Nowa gra</button>
                 <button class="panel-button">right</button>
-                <!--<input type="submit" onclick="drawRequest()" value="Zaproponuj remis"> -->
-                <!--<input type="submit" onclick="giveUp()" value="Poddaj się"> -->
             </div>
             <div id="canvas-div">
                 <canvas id="myCanvas" width="512" height="512"></canvas>
-                <!--<div class="test">s</div>-->
             </div>
         </div>
     

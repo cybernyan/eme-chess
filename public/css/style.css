@@ -210,7 +210,10 @@ aside>div>h3 {
 }
 
 /* MOBILE OVERLAY */
-@media screen and (max-width: 900px) {
+@media only screen 
+and (min-device-width : 200px) 
+and (max-device-width : 800px), 
+screen and (max-width: 900px) {
     .panel-button {
       display: block;
     }

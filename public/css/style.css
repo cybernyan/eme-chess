@@ -170,10 +170,7 @@ aside#left-aside {
 
 
 div#center-div {
-    max-height: 100%;
-
     width: 60%;
-    
     display: flex;
     flex-direction: column;
 }
@@ -353,5 +350,11 @@ screen and (max-width: 800px) {
     #left-aside, #right-aside {
         display: none !important;
     }
+
+    div#center-div {
+        width: 100%;
+        align-self: stretch;
+    }
+    
 
   }

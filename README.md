@@ -1,6 +1,6 @@
+# My Chess
 
 <p align="center">
-  <h1>My Chess</h1>
   <img src="./MyChessScreen.jpg" alt="" width="600"/>
 </p>
 

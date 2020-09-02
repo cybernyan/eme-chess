@@ -17,8 +17,7 @@
     "cookie-parser": "^1.4.4",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
-    "jQuery": "^1.7.4",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "list": "^2.0.19",
     "mssql": "^6.0.1",
     "socket.io": "^2.3.0"

@@ -28,7 +28,7 @@ const cookie = require('cookie');
 var activity = {
     NONE: "",
     PLAYING: "PLAYING",             // actual playing
-    INLOBBY: "INLOBBY",             // connected
+    INLOBBY: "IN LOBBY",             // connected
     WAITING: "WAITING",             // in waiting room
     DISCONNECTED: "DISCONNECTED"    // lost connection ( socket.on('disconnet') )
 }
@@ -74,7 +74,7 @@ class OnlinePlayer {
 
     toString() {
         var res = this.name;
-        if (!this.loggedIn) res += ' (nz)';
+        //if (!this.loggedIn) res += ' (nz)';
         res += ' ' + this.activity;
         return res;
     }

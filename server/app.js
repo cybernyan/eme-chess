@@ -40,7 +40,7 @@ function configureServer() {
 
         var c = req.signedCookies['authentication'];
         var username = c.username;
-        if (!c.logged) username += ' (niezalogowany)';
+        //if (!c.logged) username += ' (niezalogowany)';
 
         res.render("game", { username });
 

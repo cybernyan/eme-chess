@@ -6,7 +6,7 @@ var connection;
 var dbMode;
 
 var activated = false;
-const UNLOGGED = "Niezalogowany";
+const UNLOGGED = "NotLogged";
 
 // which db server?
 var mode = {

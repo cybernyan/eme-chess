@@ -3,67 +3,128 @@
 
 <head>
     <meta chaset="utf-8" />
-    <title>chess</title>
+    <title>My Chess</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="javascript/account.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script>
-    
+    <style>
+        main {
+            background: linear-gradient(#39403c, #2d3330);
+            border: solid white 1px;
+            border-top: none;
+            border-bottom: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+        }
 
-    
-    </script>
+        main>h1, main>h2 {
+            margin: 5px;
+            padding: 1px;
+        }
+
+        .start-form {
+            
+            border: solid 5px #212429;
+            box-shadow: 4px 8px #242323;
+            border-radius: 30px;
+            padding: 10px 80px;
+            margin: 25px;
+            display: flex;
+            flex-direction: column;
+            
+            max-width: 400px;
+        }
+
+        .start-form > p {
+            margin: 5px;
+            align-self: center;
+        }
+
+        .start-form > button {
+            margin: 5px;
+            align-self: center;
+            max-width: 50%;
+        }
+
+        .info-box {
+            max-width: 500px;
+            text-align: justify;
+        }
+
+        .input-div {
+            display: flex;
+            justify-content: center;
+            margin: 5px;
+        }
+
+    </style>
 </head>
 
 <body onload="init()">
 
 <main>
-    Strona główna
-<!-- TODO na heroku nie ma darmowej bazy danych, dziala tylko na localhoscie
+    
+    <h1>My Chess</h1>
+    <h2>by Bartłomiej Grochowski</h2>
+
+
+    <!-- DATABASE IS DISABLED ON HEROKU
     <div>
-        <form id="loginForm" method="POST" action="/login">
-            <p>Zaloguj się:</p>
+        <form id="loginForm" class="start-form" method="POST" action="/login">
+            <p>Log in:</p>
             <div>
-                Login: <input name="loginUsername" id="loginUsername" type="text" />
+                <label>Login:</label> <input name="loginUsername" id="loginUsername" type="text" />
                 <span id="loginUsernameError" class="errorMessage"></span>
             </div>
             <div>
-                Hasło: <input name="loginPassword" id="loginPassword" type="password" />
+                <label>Password:</label> <input name="loginPassword" id="loginPassword" type="password" />
                 <span id="loginPasswordError" class="errorMessage"></span>            
             </div>
             <div id="loginError" class="errorMessage"><%= locals.loginError %></div>
-            <input type="submit" value="Zaloguj" />
+            <button type="submit" formmethod="post">Login</button>
         </form>
     </div>
     <div>
-        <form id="createForm" method="POST" action="/create">
-            <p>Utwórz konto</p>
+        <form id="createForm" class="start-form" method="POST" action="/create">
+            <p>Create an account:</p>
             <div>
-                Login: <input id="createUsername" name="createUsername" type="text" />
+                <label>Login:</label> <input id="createUsername" name="createUsername" type="text" />
                 <span id="createUsernameError" class="errorMessage"></span>            
             </div>
             <div>
-                Hasło: <input id="createPassword" name="createPassword" type="password" />
+                <label>Password:</label> <input id="createPassword" name="createPassword" type="password" />
                 <span id="createPasswordError" class="errorMessage"></span>            
             </div>
             <div>
-                Powtórz hasło: <input id="createRepeatPassword" name="createRepeatPassword" type="password" />
+                <label>Repeat password:</label> <input id="createRepeatPassword" name="createRepeatPassword" type="password" />
                 <span id="createRepeatPasswordError" class="errorMessage"></span>            
             </div>
             <div id="createError" class="errorMessage"><%= locals.createError %></div>
-            <input type="submit" value="Zarejestruj" />
+            <button type="submit" formmethod="post">Register</button>
         </form>
     </div>
--->
+    -->
+    <div class="info-box">
+        <p>Important!</p>
+        <span>
+            This portal does not provide computer AI. To play you need at least 2 users!
+            You can connect on the same computer using two different browsers
+            (eg.&nbsp;player1 uses Google Chrome and player2 uses Firefox) or using two different devices
+            (eg.&nbsp;player1 uses computer and player2 uses mobile).
+        </span>
+    </div>
     <div>
-        <form id="noRegistrationForm" method="POST" action="/noRegistration" style="display: flex; flex-direction: column;">
-            <p>Kontynuuj bez rejestracji</p>
-            <div>
-                Nick: <input id="noRegistrationNick" name="noRegistrationNick" type="text" />
+        <form id="noRegistrationForm" class="start-form" method="POST" action="/noRegistration" style="display: flex; flex-direction: column;">
+            <p>Type your nick to play:</p>
+            <div class="input-div">
+                <label>Nick:</label> <input id="noRegistrationNick" name="noRegistrationNick" type="text" />
                 <span id="noRegistrationNickError" class="errorMessage"></span>            
             </div>
             <div id="noRegistrationError" class="errorMessage"><%= locals.noRegistrationError %></div>
-            <input type="submit" value="Kontynuuj" />
-            <!-- <p>Nie będą wtedy prowadzone Twoje statystyki!</p> -->
+            <button type="submit" formmethod="post">Play</button>
+            
         </form>
     </div>
 

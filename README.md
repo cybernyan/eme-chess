@@ -22,7 +22,7 @@ A 'Game' object stores information about state of concrete game (board, list of 
 File server/chessmen.js stores information about classes: Pawn, Bishop, Knight, Rook, Queen, King. Each class implements method 'canMove'. This method determine if move from [self.col,self.row] to [newCol,newRow] is proper or not.
 
 ## Database & authentication
-Database module provides storing information in external database like MSSQL, PostreSQL, ... . Note, that it is not implemented on heroku app, because it is not free. However in the Github code you can read ready an implementation and easly run it offline. You have to create configuration file: MyChess/config.json.
+Database module provides storing information in external database like MSSQL, PostreSQL, ... . Note, that it is not implemented on heroku app, because it is not free. However in the Github code you can read an implementation and easly run it offline. You have to create configuration file: MyChess/config.json.
 
 Example:
 ```json

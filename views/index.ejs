@@ -66,7 +66,7 @@
 
 <main>
     
-    <h1>My Chess</h1>
+    <h1>Eme chess</h1>
     <h2>by Bartłomiej Grochowski</h2>
 
 
@@ -107,23 +107,20 @@
     </div>
     -->
     <div class="info-box">
-        <p>Important!</p>
+        <p>Welcome to eme chess!</p>
         <span>
-            This portal does not provide computer AI. To play you need at least 2 users!
-            You can connect on the same computer using two different browsers
-            (eg.&nbsp;player1 uses Google Chrome and player2 uses Firefox) or using two different devices
-            (eg.&nbsp;player1 uses computer and player2 uses mobile).
+            This is your chance to get your blessing.
         </span>
     </div>
     <div>
         <form id="noRegistrationForm" class="start-form" method="POST" action="/noRegistration" style="display: flex; flex-direction: column;">
-            <p>Type your nick to play:</p>
+            <p>Enter your name:</p>
             <div class="input-div">
-                <label>Nick:</label> <input id="noRegistrationNick" name="noRegistrationNick" type="text" />
+                <label>Nickname:</label> <input id="noRegistrationNick" name="noRegistrationNick" type="text" />
                 <span id="noRegistrationNickError" class="errorMessage"></span>            
             </div>
             <div id="noRegistrationError" class="errorMessage"><%= locals.noRegistrationError %></div>
-            <button type="submit" formmethod="post">Play</button>
+            <button type="submit" formmethod="post">Let's go!</button>
             
         </form>
     </div>
